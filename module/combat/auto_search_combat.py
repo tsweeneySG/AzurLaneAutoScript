@@ -78,9 +78,7 @@ class AutoSearchCombat(Combat):
             # End
             if self.is_combat_loading():
                 break
-            if self.is_in_auto_search_menu():
-                raise CampaignEnd
-            if self._handle_auto_search_menu_missing():
+            if self.is_in_auto_search_menu() or self._handle_auto_search_menu_missing():
                 raise CampaignEnd
 
     def auto_search_combat_execute(self, emotion_reduce, fleet_index):
@@ -98,6 +96,12 @@ class AutoSearchCombat(Combat):
         while 1:
             self.device.screenshot()
 
+            if self.handle_combat_automation_confirm():
+                continue
+
+            # End
+            if self.is_in_auto_search_menu() or self._handle_auto_search_menu_missing():
+                raise CampaignEnd
             if self.is_combat_executing():
                 break
 
@@ -113,6 +117,9 @@ class AutoSearchCombat(Combat):
                 continue
 
             # End
+            if self.is_in_auto_search_menu() or self._handle_auto_search_menu_missing():
+                self.device.screenshot_interval_set(0)
+                raise CampaignEnd
             if self.is_combat_executing():
                 continue
             if self.appear(BATTLE_STATUS_S) or self.appear(BATTLE_STATUS_A) or self.appear(BATTLE_STATUS_B) \
@@ -140,9 +147,7 @@ class AutoSearchCombat(Combat):
             # End
             if self.is_auto_search_running():
                 break
-            if self.is_in_auto_search_menu():
-                raise CampaignEnd
-            if self._handle_auto_search_menu_missing():
+            if self.is_in_auto_search_menu() or self._handle_auto_search_menu_missing():
                 raise CampaignEnd
 
     def auto_search_combat(self, emotion_reduce=None, fleet_index=1):
