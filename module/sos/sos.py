@@ -129,9 +129,9 @@ class CampaignSos(CampaignRun, CampaignBase):
             folder (str): Default to 'campaign_sos'.
             total (int): Default to 1, because SOS stages can only run once.
         """
-        for chapter in range(3, 11):
+        for chapter in range(10, 11):
             self.ui_weigh_anchor()
-            self._sos_signal_search()
+            #self._sos_signal_search()
 
             fleets = self.config.__getattribute__(f'SOS_FLEETS_CHAPTER_{chapter}')
             fleet_1 = fleets[0]
