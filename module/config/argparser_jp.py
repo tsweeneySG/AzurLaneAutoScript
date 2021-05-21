@@ -330,6 +330,7 @@ def main(ini_name=''):
     reward_guild = reward_parser.add_argument_group('Guild', 'Check Guild Logistics and Operations. Running for every reward loop.', gooey_options={'label_color': '#931D03'})
     reward_guild.add_argument('--enable_guild_logistics', default=default('--enable_guild_logistics'), help='Enable logistics actions if applicable.', choices=['yes', 'no'], gooey_options={'label_color': '#4B5F83'})
     reward_guild.add_argument('--enable_guild_operations', default=default('--enable_guild_operations'), help='', choices=['yes', 'no'], gooey_options={'label_color': '#4B5F83'})
+    reward_guild.add_argument('--guild_operations_join_threshold', default=default('--guild_operations_join_threshold'), help='Enter between 0 and 1\nEx) \'0.5\' join if current progress roughly less than half or \'1\' join regardless of progress', gooey_options={'label_color': '#4B5F83'})
     reward_guild.add_argument('--guild_interval', default=default('--guild_interval'),
                              help='How many minutes to trigger checking. Recommend to set a time range, such as "10, 40"', gooey_options={'label_color': '#4B5F83'})
     reward_guild_logistics_items = reward_guild.add_argument_group('Logistics item input', 'Available items: t1, t2, t3, oxycola, coolant, coins, oil, and merit. Omitting an item will skip it. Less error-prone with many specified', gooey_options={'label_color': '#4B5F83'})
@@ -342,9 +343,6 @@ def main(ini_name=''):
                         gooey_options={'label_color': '#4B5F83'})
     reward_guild_logistics_plates.add_argument('--guild_logistics_plate_t3_order_string', default=default('--guild_logistics_plate_t3_order_string'),
                         gooey_options={'label_color': '#4B5F83'})
-    reward_guild_operations_join = reward_guild.add_argument_group('Operations guild join threshold',
-                        'Enter between 0 and 1\nEx) \'0.5\' join if current progress roughly less than half or \'1\' join regardless of progress', gooey_options={'label_color': '#4B5F83'})
-    reward_guild_operations_join.add_argument('--guild_operations_join_threshold', default=default('--guild_operations_join_threshold'), gooey_options={'label_color': '#4B5F83'})
     reward_guild_operations_boss = reward_guild.add_argument_group('Operations guild raid boss input', '', gooey_options={'label_color': '#4B5F83'})
     reward_guild_operations_boss.add_argument('--enable_guild_operations_boss_auto', default=default('--enable_guild_operations_boss_auto'),
                                               help='Enable auto-battle of guild raid boss. If fleet composition with or without guild support is incomplete, does not attempt. Enable boss recommend to bypass',
@@ -579,6 +577,26 @@ def main(ini_name=''):
     # os_semi = os_semi_parser.add_argument_group('os_clear_map', 'Only recommended to use in save zones. To use in normal zones, execute air search manually first.\nUsage: Enter map manually and run\nRecommend to re-check map manually after run', gooey_options={'label_color': '#931D03'})
     # os_semi.add_argument('--enable_os_ash_attack', default=default('--enable_os_ash_attack'), choices=['yes', 'no'], help='Attack ash if beacon data is full', gooey_options={'label_color': '#4B5F83'})
 
+    # ==========OS clear world==========
+    os_world_parser = subs.add_parser('os_world_clear')
+    os_world = os_world_parser.add_argument_group('OS world clear',
+                                                  'Must clear story mode of all available chapters and '
+                                                  'purchase the OS logger item in main supply shop for '
+                                                  '5k oil before using this module\n\n'
+                                                  'Explore all unsafe zones between configured range inclusive and turn into safe\n'
+                                                  'Captains should configure approriately based on current adaptibility numbers '
+                                                  'and fleet formation',
+                                                  gooey_options={'label_color': '#931D03'})
+    os_world.add_argument('--os_world_min_level', default=default('--os_world_min_level'),
+                          help='Use same number in both fields for exactly 1 range',
+                          choices=['1', '2', '3', '4', '5', '6'],
+                          gooey_options={'label_color': '#4B5F83'})
+    os_world.add_argument('--os_world_max_level', default=default('--os_world_max_level'),
+                          help='Recommend 4 or lower for single fleet clear, 5 and higher '
+                               'can be difficult with low adaptibility',
+                          choices=['1', '2', '3', '4', '5', '6'],
+                          gooey_options={'label_color': '#4B5F83'})
+
     # ==========OS fully auto==========
     os_parser = subs.add_parser('os_fully_auto')
     os = os_parser.add_argument_group('OS fully auto', 'Run sequence: Accept dailies and buy supplies > do dailies > do obscure zone > meowfficer farming\nPort shop is a limited pool of items. Ports have the same items, but appear randomly. Buy all if you want good items\nShop priority format: ActionPoint > PurpleCoins > TuringSample > RepairPack', gooey_options={'label_color': '#931D03'})
@@ -598,6 +616,7 @@ def main(ini_name=''):
     os_setting = os.add_argument_group('OS setting', '', gooey_options={'label_color': '#931D03'})
     os_setting.add_argument('--enable_os_action_point_buy', default=default('--enable_os_action_point_buy'), choices=['yes', 'no'], help='Use oil to buy action points, buy first then use AP boxes', gooey_options={'label_color': '#4B5F83'})
     os_setting.add_argument('--os_action_point_preserve', default=default('--os_action_point_preserve'), help='Include AP boxes, stop if lower than this', gooey_options={'label_color': '#4B5F83'})
+    os_setting.add_argument('--os_repair_threshold', default=default('--os_repair_threshold'), help='Retreat to nearest azur port for repairs if any ship\'s HP in fleet is below configured threshold after zone clear, limit between 0 and 1', gooey_options={'label_color': '#4B5F83'})
 
     os_shop = os.add_argument_group('OS shop', '', gooey_options={'label_color': '#931D03'})
     os_shop.add_argument('--enable_os_akashi_shop_buy', default=default('--enable_os_akashi_shop_buy'), choices=['yes', 'no'], help='', gooey_options={'label_color': '#4B5F83'})
