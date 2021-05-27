@@ -54,3 +54,5 @@ To add a new event, add a new row in here, and run `python -m dev_tools.event_ex
 | 20210415   | event 20210415 tw        | Encircling Graf Spee           | -                      | -                                | -                                    | 復刻圍剿施佩伯爵   |
 | 20210422   | event 20210422 cn        | Daedalian Hymn                 | 复兴的赞美诗           | Daedalian Hymn                   | 讃える復興の迷路                     | -                  |
 | 20210429   | event 20210429 tw        | Ink Stained Steel Sakura       | -                      | -                                | -                                    | 復刻墨染的鋼鐵之花 |
+| 20210527   | event 20210527 tw        | Microlayer Medley              | -                      | -                                | -                                    | 微層混合           |
+| 20210527   | event 20210527 cn        | Mirror Involution              | 镜位螺旋               | Mirror Involution                | 照らす螺旋の鏡海                     | -                  |
