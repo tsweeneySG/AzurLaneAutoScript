@@ -1,9 +1,10 @@
 import numpy as np
 from PIL import ImageStat
+from scipy import signal
 
 from module.base.base import ModuleBase
 from module.base.button import Button
-from module.base.utils import area_offset
+from module.base.utils import area_offset, color_similarity_2d
 from module.logger import logger
 from module.map.assets import *
 
@@ -12,7 +13,7 @@ class FleetOperator:
     FLEET_BAR_SHAPE_Y = 33
     FLEET_BAR_MARGIN_Y = 9
     FLEET_BAR_ACTIVE_STD = 45  # Active: 67, inactive: 12.
-    FLEET_IN_USE_STD = 20  # In use 52, not in use (3, 6).
+    FLEET_IN_USE_STD = 27  # In use 52, not in use (3, 6).
     FLEET_PREPARE_OPERATION_SLEEP = (0.25, 0.35)
 
     def __init__(self, choose, bar, clear, in_use, main):
@@ -136,6 +137,24 @@ class FleetPreparation(ModuleBase):
     map_fleet_checked = False
     map_is_hard_mode = False
 
+    def get_map_is_hard_mode(self):
+        """
+        Detect how many light orange lines are there.
+        Having lines means current map has stat limits and user has satisfied at least one of them,
+        so this is a hard map.
+
+        Returns:
+            bool:
+        """
+        area = (208, 130, 226, 551)
+        image = color_similarity_2d(self.image_area(area), color=(249, 199, 0))
+        height = np.max(image, axis=1)
+        parameters = {'height': 180, 'distance': 5}
+        peaks, _ = signal.find_peaks(height, **parameters)
+        lines = len(peaks)
+        logger.attr('Light_orange_line', lines)
+        return lines > 0
+
     def fleet_preparation(self):
         """Change fleets.
 
@@ -145,7 +164,8 @@ class FleetPreparation(ModuleBase):
         logger.info(f'Using fleet: {[self.config.FLEET_1, self.config.FLEET_2, self.config.SUBMARINE]}')
         if self.map_fleet_checked:
             return False
-        self.map_is_hard_mode = self.appear(FLEET_PREPARATION_HARD_1) or self.appear(FLEET_PREPARATION_HARD_2)
+
+        self.map_is_hard_mode = self.get_map_is_hard_mode()
         if self.map_is_hard_mode:
             logger.info('Hard Campaign. No fleet preparation')
             return False
