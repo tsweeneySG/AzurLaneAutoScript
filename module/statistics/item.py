@@ -21,7 +21,7 @@ class AmountOcr(Digit):
 
 
 AMOUNT_OCR = AmountOcr([], threshold=96, name='Amount_ocr')
-PRICE_OCR = Digit([], letter=(255, 223, 57), threshold=128, name='Price_ocr')
+PRICE_OCR = Digit([], letter=(255, 223, 57), threshold=32, name='Price_ocr')
 
 
 class Item:
@@ -261,5 +261,12 @@ class ItemGrid:
             price_list = self.price_ocr.ocr(price_list, direct_ocr=True)
             for item, p in zip(self.items, price_list):
                 item.price = p
+
+        # Delete wrong results
+        items = [item for item in self.items if not (price and item.price <= 0)]
+        diff = len(self.items) - len(items)
+        if diff > 0:
+            logger.warning(f'Ignore {diff} items, because price <= 0')
+            self.items = items
 
         return self.items
