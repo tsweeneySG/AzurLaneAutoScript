@@ -4,13 +4,15 @@ from module.logger import logger
 
 
 class Filter:
-    def __init__(self, regex, attr, preset):
+    def __init__(self, regex, attr, preset=()):
         """
         Args:
             regex: Regular expression.
             attr: Attribute name.
             preset: Build-in string preset.
         """
+        if isinstance(regex, str):
+            regex = re.compile(regex)
         self.regex = regex
         self.attr = attr
         self.preset = preset
@@ -18,7 +20,7 @@ class Filter:
         self.filter = []
 
     def load(self, string):
-        self.filter_raw = [f.strip() for f in string.split('>')]
+        self.filter_raw = [f.strip(' \t\r\n') for f in string.split('>')]
         self.filter = [self.parse_filter(f) for f in self.filter_raw]
 
     def is_preset(self, filter):
@@ -30,16 +32,17 @@ class Filter:
             objs (list[object]):
 
         Returns:
-            list: A list of str and int, such as [2, 3, 0, 'reset']
+            list: A list of objects and preset strings, such as [object, object, object, 'reset']
         """
         out = []
         for raw, filter in zip(self.filter_raw, self.filter):
             if self.is_preset(raw):
-                out.append(raw)
+                if raw not in out:
+                    out.append(raw)
             else:
                 for index, obj in enumerate(objs):
-                    if self.apply_filter_to_obj(obj=obj, filter=filter) and index not in out:
-                        out.append(index)
+                    if self.apply_filter_to_obj(obj=obj, filter=filter) and obj not in out:
+                        out.append(obj)
 
         return out
 
