@@ -1,0 +1,16 @@
+.container-menu-collapsed {
+    display: none;
+}
+
+.container-content-collapsed {
+    display: none;
+}
+
+*[style*="container-content"] {
+    padding: .25rem;
+    margin: 0
+}
+
+.container-log {
+    font-size: .75rem !important;
+}

@@ -5,7 +5,6 @@ from module.base.decorator import Config
 from module.base.utils import *
 from module.exception import CampaignNameError
 from module.logger import logger
-from module.map_detection.utils import Points
 from module.ocr.ocr import Ocr
 from module.template.assets import *
 
@@ -91,6 +90,8 @@ class CampaignOcr(ModuleBase):
             button_name = button.crop(area=name_area, image=image)
             name = extract_letters(button_name.image, letter=name_letter, threshold=name_thresh)
             button_name = button_name.crop(area=self._extract_stage_name(name))
+            if not len(button.color):
+                button.load_color(image)
             button.area = button_name.area
             digits.append(button)
 
@@ -141,7 +142,7 @@ class CampaignOcr(ModuleBase):
         x_skip = 10
         interval = 5
         x_color = np.convolve(np.mean(image, axis=0), np.ones(interval), 'valid') / interval
-        x_list = np.where(x_color[x_skip:] > 235)[0]
+        x_list = np.where(x_color[x_skip:] > 240)[0]
         if x_list is None or len(x_list) == 0:
             logger.warning('No interval between digit and text.')
             area = (0, 0, image.shape[1], image.shape[0])
@@ -153,7 +154,8 @@ class CampaignOcr(ModuleBase):
         self.stage_entrance = {}
         buttons = self.campaign_extract_name_image(image)
         if len(buttons) == 0:
-            logger.warning('No stage found.')
+            logger.info('No stage found.')
+            raise CampaignNameError
 
         ocr = Ocr(buttons, name='campaign', letter=(255, 255, 255), threshold=128,
                   alphabet='0123456789ABCDEFGHIJKLMNPQRSTUVWXYZ-')

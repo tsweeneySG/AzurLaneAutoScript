@@ -28,6 +28,22 @@ ACTION_POINTS_COST = {
     5: 30,
     6: 40,
 }
+ACTION_POINTS_COST_OBSCURE = {
+    1: 10,  # No obscured zones in CL1 actually
+    2: 10,
+    3: 20,
+    4: 20,
+    5: 40,
+    6: 40,
+}
+ACTION_POINTS_COST_LOGGER = {
+    1: 80,
+    2: 80,
+    3: 80,  # No obscured zones under CL4 actually
+    4: 80,
+    5: 100,
+    6: 100,
+}
 ACTION_POINTS_BUY = {
     1: 4000,
     2: 2000,
@@ -97,13 +113,22 @@ class ActionPointHandler(UI):
         Returns:
             int: Action points that will cost.
         """
-        cost = ACTION_POINTS_COST[zone.hazard_level]
+        if pinned == 'DANGEROUS':
+            cost = ACTION_POINTS_COST[zone.hazard_level] * 2
+        elif pinned == 'SAFE':
+            cost = ACTION_POINTS_COST[zone.hazard_level]
+        elif pinned == 'OBSCURE':
+            cost = ACTION_POINTS_COST_OBSCURE[zone.hazard_level]
+        elif pinned == 'LOGGER':
+            cost = ACTION_POINTS_COST_LOGGER[zone.hazard_level]
+        elif pinned == 'STRONGHOLD':
+            cost = 200
+        else:
+            logger.warning(f'Unable to get AP cost from zone={zone}, pinned={pinned}, assume it costs 40.')
+            cost = 40
+
         if zone.is_port:
             cost = 0
-        if pinned == 'DANGEROUS':
-            cost *= 2
-        if pinned == 'STRONGHOLD':
-            cost = 200
 
         return cost
 
@@ -206,8 +231,8 @@ class ActionPointHandler(UI):
         for _ in range(12):
             # End
             if self._action_point_total < self.config.OS_ACTION_POINT_PRESERVE:
-                if self.config.ENABLE_OS_ACTION_POINT_BUY:
-                    if self.action_point_buy(preserve=self.config.STOP_IF_OIL_LOWER_THAN):
+                if self.config.OpsiGeneral_BuyActionPoint:
+                    if self.action_point_buy(preserve=self.config.OpsiGeneral_OilLimit):
                         continue
                 logger.info(f'Reach the limit of action points, preserve={self.config.OS_ACTION_POINT_PRESERVE}')
                 self.action_point_quit()
@@ -218,8 +243,8 @@ class ActionPointHandler(UI):
                 return True
 
             # Get more action points
-            if self.config.ENABLE_OS_ACTION_POINT_BUY:
-                if self.action_point_buy(preserve=self.config.STOP_IF_OIL_LOWER_THAN):
+            if self.config.OpsiGeneral_BuyActionPoint:
+                if self.action_point_buy(preserve=self.config.OpsiGeneral_OilLimit):
                     continue
             box = [index for index in [3, 2, 1] if self._action_point_box[index] > 0]
             if len(box):

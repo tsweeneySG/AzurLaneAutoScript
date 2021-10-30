@@ -2,10 +2,10 @@ from module.base.button import ButtonGrid
 from module.base.decorator import cached_property
 from module.combat.assets import GET_ITEMS_1, GET_SHIP
 from module.logger import logger
-from module.reward.tactical_class import Book
 from module.shop.assets import *
 from module.shop.base_globals import *
 from module.statistics.item import ItemGrid
+from module.tactical.tactical_class import Book
 from module.ui.assets import BACK_ARROW
 from module.ui.ui import UI
 
@@ -80,6 +80,28 @@ class ShopBase(UI):
         except AttributeError:
             logger.warning(f'shop_get_currency --> Missing func shop_{key}_get_currency')
 
+    def shop_items_loading_finished(self, items, key='medal'):
+        """
+        Check if shop items loading is finished. If not, the game shows some default items.
+
+        Args:
+            items: list[Item]
+            key: String identifies which shop
+
+        Returns:
+            bool:
+        """
+        # Use default price to check
+        try:
+            default_price = self.__getattribute__(f'shop_{key}_default_price')
+        except AttributeError:
+            return True
+
+        for item in items:
+            if int(item.price) == default_price:
+                return False
+        return True
+
     def shop_get_items(self, key='general'):
         """
         Args:
@@ -95,14 +117,20 @@ class ShopBase(UI):
             logger.warning(f'shop_get_items --> Missing cached_property shop_{key}_items')
             return []
 
-        item_grid.predict(
-            self.device.image,
-            name=True,
-            amount=False,
-            cost=True if key == 'general' else False,
-            price=True,
-            tag=False
-        )
+        while 1:
+            item_grid.predict(
+                self.device.image,
+                name=True,
+                amount=False,
+                cost=True if key == 'general' else False,
+                price=True,
+                tag=False
+            )
+
+            if self.shop_items_loading_finished(item_grid.items, key):
+                break
+
+            self.device.screenshot()
 
         items = item_grid.items
         if len(items):
@@ -144,7 +172,7 @@ class ShopBase(UI):
         items = self.shop_get_items(key=shop_type)
 
         try:
-            selection = selection.replace(' ', '').split('>')
+            selection = selection.replace(' ', '').replace('\n', '').split('>')
             selection = list(filter(''.__ne__, selection))
         except AttributeError:
             logger.warning('shop_get_item_to_buy --> Invalid filter string '
@@ -218,6 +246,7 @@ class ShopBase(UI):
         Returns:
             int:
         """
+        logger.hr(f'{shop_type} shop buy', level=2)
         count = 0
         for _ in range(12):
             item = self.shop_get_item_to_buy(shop_type, selection)

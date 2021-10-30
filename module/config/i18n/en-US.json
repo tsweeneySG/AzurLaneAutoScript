@@ -1,0 +1,1579 @@
+{
+  "Menu": {
+    "Task": {
+      "name": "",
+      "help": ""
+    },
+    "Alas": {
+      "name": "Alas",
+      "help": ""
+    },
+    "Farm": {
+      "name": "Farm",
+      "help": ""
+    },
+    "Reward": {
+      "name": "Reward",
+      "help": ""
+    },
+    "Daily": {
+      "name": "Daily",
+      "help": ""
+    },
+    "Opsi": {
+      "name": "OpSi",
+      "help": ""
+    },
+    "Tool": {
+      "name": "Tools",
+      "help": ""
+    }
+  },
+  "Task": {
+    "Alas": {
+      "name": "Alas",
+      "help": ""
+    },
+    "General": {
+      "name": "General",
+      "help": ""
+    },
+    "Restart": {
+      "name": "Restart",
+      "help": ""
+    },
+    "Main": {
+      "name": "Main",
+      "help": ""
+    },
+    "Event": {
+      "name": "Event",
+      "help": ""
+    },
+    "Raid": {
+      "name": "Raid",
+      "help": ""
+    },
+    "C11AffinityFarming": {
+      "name": "C1-1 Affinity Farming",
+      "help": ""
+    },
+    "C72MysteryFarming": {
+      "name": "C7-2 Mystery Farming",
+      "help": ""
+    },
+    "C122MediumLeveling": {
+      "name": "C12-2 Leveling",
+      "help": ""
+    },
+    "C124LargeLeveling": {
+      "name": "C12-4 Leveling",
+      "help": ""
+    },
+    "GemsFarming": {
+      "name": "Gems Farming",
+      "help": ""
+    },
+    "Commission": {
+      "name": "Commission",
+      "help": ""
+    },
+    "Tactical": {
+      "name": "Tactical",
+      "help": ""
+    },
+    "Research": {
+      "name": "Research",
+      "help": ""
+    },
+    "Dorm": {
+      "name": "Dorm",
+      "help": ""
+    },
+    "Meowfficer": {
+      "name": "Meowfficer",
+      "help": ""
+    },
+    "Guild": {
+      "name": "Guild",
+      "help": ""
+    },
+    "Reward": {
+      "name": "Reward",
+      "help": ""
+    },
+    "ShopFrequent": {
+      "name": "ShopFrequent",
+      "help": ""
+    },
+    "ShopOnce": {
+      "name": "ShopOnce",
+      "help": ""
+    },
+    "Shipyard": {
+      "name": "Shipyard",
+      "help": ""
+    },
+    "Gacha": {
+      "name": "Gacha",
+      "help": ""
+    },
+    "DataKey": {
+      "name": "DataKey",
+      "help": ""
+    },
+    "Daily": {
+      "name": "Daily",
+      "help": ""
+    },
+    "Hard": {
+      "name": "Hard",
+      "help": ""
+    },
+    "Exercise": {
+      "name": "Exercise",
+      "help": ""
+    },
+    "Sos": {
+      "name": "SOS",
+      "help": ""
+    },
+    "EventAb": {
+      "name": "EventAB",
+      "help": ""
+    },
+    "EventSp": {
+      "name": "EventSP",
+      "help": ""
+    },
+    "RaidDaily": {
+      "name": "Raid Daily",
+      "help": ""
+    },
+    "WarArchives": {
+      "name": "War Archives",
+      "help": ""
+    },
+    "OpsiGeneral": {
+      "name": "OpSi General",
+      "help": ""
+    },
+    "OpsiAshAssist": {
+      "name": "OpSi Ash Assist",
+      "help": ""
+    },
+    "OpsiExplore": {
+      "name": "OpSi Explore",
+      "help": ""
+    },
+    "OpsiDaily": {
+      "name": "OpSi Daily",
+      "help": ""
+    },
+    "OpsiObscure": {
+      "name": "OpSi Obscure",
+      "help": ""
+    },
+    "OpsiMeowfficerFarming": {
+      "name": "OpSi Meowfficer Farming",
+      "help": ""
+    },
+    "Daemon": {
+      "name": "Normal Semi-auto",
+      "help": ""
+    },
+    "OpsiDaemon": {
+      "name": "OpSi Semi-auto",
+      "help": ""
+    },
+    "Benchmark": {
+      "name": "Performance Test",
+      "help": ""
+    },
+    "AzurLaneUncensored": {
+      "name": "[CN] Uncensored Patch",
+      "help": ""
+    }
+  },
+  "Scheduler": {
+    "_info": {
+      "name": "Scheduler",
+      "help": ""
+    },
+    "Enable": {
+      "name": "Enable Task",
+      "help": "Join this task to scheduler"
+    },
+    "NextRun": {
+      "name": "Next Run",
+      "help": "Updated automatically after completing the task to set next scheduled run, typically not manually modified\nHowever you can force immediate scheduling if you clear this text field"
+    },
+    "Command": {
+      "name": "Command",
+      "help": ""
+    },
+    "SuccessInterval": {
+      "name": "Success Interval",
+      "help": "After successful, postpone next run for X minutes"
+    },
+    "FailureInterval": {
+      "name": "Failure Interval",
+      "help": "After failure, postpone next run for X minutes"
+    },
+    "ServerUpdate": {
+      "name": "Server Update",
+      "help": "Series of server refresh time(s) as to when this task will next run, this is automatically converted to respective time zone, generally do not need to modify"
+    }
+  },
+  "Emulator": {
+    "_info": {
+      "name": "Emulator Settings",
+      "help": ""
+    },
+    "Serial": {
+      "name": "Serial",
+      "help": "Default serial for select emulators:\n- BlueStacks 127.0.0.1:5555\n- BlueStacks4 Hyper-V use \"bluestacks4-hyperv\", \"bluestacks4-hyperv-2\" for multi instance, and so on\n- NoxPlayer 127.0.0.1:62001\n- NoxPlayer64bit 127.0.0.1:59865\n- MuMuPlayer 127.0.0.1:7555\n- MemuPlayer 127.0.0.1:21503\n- LDPlayer emulator-5554 or 127.0.0.1:5555\nIf there are multiple emulator instances running, the default is reserved for one of them and the others will use different serials to avoid conflicts\nOpen console.bat and run `adb devices` to find what they are"
+    },
+    "PackageName": {
+      "name": "Package Name",
+      "help": "com.bilibili.azurlane (CN)\ncom.YoStarEN.AzurLane (EN)\ncom.YoStarJP.AzurLane (JP)\ncom.hkmanjuu.azurlane.gp (TW)\nIf none of these please refer to your AppStore"
+    },
+    "Server": {
+      "name": "Game Server",
+      "help": "Should be aligned with package name e.g. com.YoStarEN.AzurLane > EN",
+      "cn": "CN",
+      "en": "EN",
+      "jp": "JP",
+      "tw": "TW"
+    },
+    "ScreenshotMethod": {
+      "name": "Screenshot Method",
+      "help": "Speed: aScreenCap > uiautomator2 ~= ADB\nADB is recommended",
+      "ADB": "ADB ",
+      "uiautomator2": "uiautomator2 ",
+      "aScreenCap": "aScreenCap "
+    },
+    "ControlMethod": {
+      "name": "Control Method",
+      "help": "Speed: minitouch >>> uiautomator2 ~= ADB\nminitouch is recommended",
+      "ADB": "ADB ",
+      "uiautomator2": "uiautomator2 ",
+      "minitouch": "minitouch "
+    }
+  },
+  "Error": {
+    "_info": {
+      "name": "Debug Settings",
+      "help": ""
+    },
+    "HandleError": {
+      "name": "Enable Exception Handling",
+      "help": "Handles select exceptions, will retreat if in battle"
+    },
+    "SaveError": {
+      "name": "Record Exception",
+      "help": "Records exception and log into directory for review or sharing"
+    },
+    "ScreenshotLength": {
+      "name": "Record Screenshot(s)",
+      "help": "Number of screenshots saved when exception occurs"
+    }
+  },
+  "Optimization": {
+    "_info": {
+      "name": "Optimization Settings",
+      "help": ""
+    },
+    "CombatScreenshotInterval": {
+      "name": "Combat Screenshot Interval",
+      "help": "Frequency of screenshots in seconds taken during battle, can help reduce CPU"
+    },
+    "TaskHoardingDuration": {
+      "name": "Hoard Tasks For X Minute(s)",
+      "help": "By purposely not adding ready tasks to pending, allows for larger subsets to be built and run en masse at a later time\nCan reduce the frequency of operating AL"
+    },
+    "CloseGameDuringWait": {
+      "name": "Close Game During Wait",
+      "help": "Close AL when there are no pending tasks, can help reduce CPU"
+    }
+  },
+  "DropRecord": {
+    "_info": {
+      "name": "Drop Record Settings",
+      "help": ""
+    },
+    "SaveFolder": {
+      "name": "Drop Save Directory",
+      "help": ""
+    },
+    "AzurStatsID": {
+      "name": "AzurStat ID",
+      "help": "Used to identify your upload to <https://azur-stats.lyoko.io>, the ID consists of random characters and can be changed at any time"
+    },
+    "SaveResearch": {
+      "name": "Save Research Screenshots",
+      "help": ""
+    },
+    "UploadResearch": {
+      "name": "Upload Research Screenshots",
+      "help": ""
+    },
+    "SaveCommission": {
+      "name": "Save Commission Screenshots",
+      "help": ""
+    },
+    "UploadCommission": {
+      "name": "Upload Commissions Screenshots",
+      "help": ""
+    },
+    "SaveCombat": {
+      "name": "Save Battle Drop Screenshots",
+      "help": "If enabled, clicks will be slowed down to ensure capture"
+    }
+  },
+  "Retirement": {
+    "_info": {
+      "name": "Retirement Settings",
+      "help": ""
+    },
+    "Enable": {
+      "name": "Enable Retirement",
+      "help": ""
+    },
+    "RetireMode": {
+      "name": "Retirement Mode",
+      "help": "If mode is one click retire, in game retire settings are enforced\nIf mode is enhance but unable to do so, will fallback to one click retire as default",
+      "one_click_retire": "one_click_retire",
+      "enhance": "enhance",
+      "old_retire": "old_retire"
+    },
+    "RetireAmount": {
+      "name": "Amount to Retire",
+      "help": "",
+      "retire_all": "retire_all",
+      "retire_10": "retire_10"
+    },
+    "EnhanceFavourite": {
+      "name": "Use Favorite Filter for Enhance",
+      "help": ""
+    },
+    "EnhanceFilter": {
+      "name": "Ship Type(s) Filter for Enhance",
+      "help": "\"cv > bb > ...\"; may substitute a type with \"?\" to have Alas select a type at random\nMust enter at least 1 whitespace character to disable type filtering"
+    },
+    "EnhanceCheckPerCategory": {
+      "name": "Number Checked Per Category for Enhance",
+      "help": "Restrict number of ships to be checked per category before moving on to the next one if any. Ships that are in battle do not count towards this number and are skipped to the next available ship for enhancement"
+    },
+    "OldRetireN": {
+      "name": "Retire Common",
+      "help": "Only applies to old retire mode"
+    },
+    "OldRetireR": {
+      "name": "Retire Rare",
+      "help": "Only applies to old retire mode"
+    },
+    "OldRetireSR": {
+      "name": "Retire Elite",
+      "help": "Only applies to old retire mode"
+    },
+    "OldRetireSSR": {
+      "name": "Retire Super Rare",
+      "help": "Only applies to old retire mode"
+    }
+  },
+  "Campaign": {
+    "_info": {
+      "name": "Level Settings",
+      "help": ""
+    },
+    "Name": {
+      "name": "Level Name",
+      "help": "7-2, 12-4, or SP4; case insensitive; if the level is missing, please wait for next update"
+    },
+    "Event": {
+      "name": "Event Name",
+      "help": "Automatically selects to the latest event",
+      "campaign_main": "campaign_main",
+      "event_20211028_tw": "復刻光與影的鳶尾之華",
+      "event_20211028_cn": "Skybound Oratorio Rerun",
+      "raid_20210708": "Cross Wave rerun",
+      "event_20201012_cn": "Sundered Blue",
+      "event_20200917_cn": "Dreamwakers Butterfly",
+      "event_20210916_cn": "Upon the Shimmering Blue",
+      "event_20210722_cn": "Azur Anthem",
+      "event_20210819_cn": "Microlayer Medley Rerun",
+      "event_20200806_cn": "The Enigma and the Shark Rerun",
+      "event_20200723_cn": "Aurora Noctis",
+      "event_20200903_en": "Stars of the Shimmering Fjord",
+      "event_20210624_cn": "Swirling Cherry Blossoms Rerun",
+      "event_20210624_tw": "穹頂下的聖詠曲",
+      "event_20210610_tw": "夜幕下的歸途",
+      "event_20210527_cn": "Mirror Involution",
+      "event_20210527_tw": "微層混合",
+      "event_20210429_tw": "復刻墨染的鋼鐵之花",
+      "event_20210422_cn": "Daedalian Hymn",
+      "event_20210415_tw": "復刻圍剿施佩伯爵",
+      "event_20210325_cn": "Ashen Simulacrum Rerun",
+      "event_20210225_tw": "北境序曲",
+      "event_20210225_cn": "Khorovod of Dawns Rime",
+      "event_20210121_cn": "Empyreal Tragicomedy Rerun",
+      "event_20201229_cn": "Inverted Orthant",
+      "event_20201126_cn": "Vacation Lane",
+      "event_20200312_cn": "The Solomon Ranger Rerun",
+      "event_20201029_cn": "Universe in Unison",
+      "event_20201002_en": "Counterattack Within the Fjord",
+      "event_20200820_cn": "Scherzo of Iron and Blood Rerun",
+      "event_20200716_en": "Ink Stained Steel Sakura Rerun",
+      "raid_20200624": "Air Raid Drills with Essex Rerun",
+      "event_20200611_en": "Skybound Oratorio",
+      "event_20200603_en": "Prelude under the Moon Rerun",
+      "event_20200603_cn": "峡湾间的反击",
+      "event_20200521_en": "Iris of Light and Dark Rerun",
+      "event_20200521_cn": "穹顶下的圣咏曲",
+      "event_20200507_cn": "The Way Home in the Night",
+      "event_20200423_cn": "Crimson Echoes Rerun",
+      "event_20200326_cn": "Microlayer Medley",
+      "event_20200227_cn": "Northern Overture",
+      "war_archives_20180726_cn": "archives Iris of Light and Dark",
+      "war_archives_20180607_cn": "archives Ink Stained Steel Sakura",
+      "war_archives_20190221_en": "archives Winters Crown",
+      "war_archives_20191010_en": "archives Encircling Graf Spee",
+      "war_archives_20181026_en": "archives Fallen Wings",
+      "war_archives_20190620_en": "archives Glorious Battle",
+      "war_archives_20190321_en": "archives Visitors Dyed in Red",
+      "war_archives_20191031_en": "archives Divergent Chessboard",
+      "war_archives_20181020_en": "archives Strive Wish and Strategize"
+    },
+    "Mode": {
+      "name": "Level Mode",
+      "help": "Only configurable in Farm Main",
+      "normal": "normal",
+      "hard": "hard"
+    },
+    "UseClearMode": {
+      "name": "Use Clear Mode",
+      "help": ""
+    },
+    "UseFleetLock": {
+      "name": "Use Fleet Lock",
+      "help": ""
+    },
+    "UseAutoSearch": {
+      "name": "Use Auto Search",
+      "help": ""
+    },
+    "Use2xBook": {
+      "name": "Use High-Efficiency Combat Logistics Plan",
+      "help": "Twice the oil consumption but also twice the exp and drops"
+    },
+    "AmbushEvade": {
+      "name": "Evade Ambush(es)",
+      "help": ""
+    }
+  },
+  "StopCondition": {
+    "_info": {
+      "name": "Stop Condition Settings",
+      "help": "After triggering any of following conditions, the current task will be stopped"
+    },
+    "RunCount": {
+      "name": "Run Level X Time(s)",
+      "help": "Automatically decreases by 1 for every completion and stops the current task upon reaching zero; saving as 0 implies unlimited runs until a different stop condition is met"
+    },
+    "OilLimit": {
+      "name": "Keep Oil Above X",
+      "help": "Stop current task if oil is found to be below this number"
+    },
+    "MapAchievement": {
+      "name": "Level Achievement",
+      "help": "Stop current task if level has been 100% Clear, 3 Stars, Threat Safe, or Threat Safe without 3 Stars. Non-stop implies no achievement required, thus task will not be stopped for this case",
+      "non_stop": "non_stop",
+      "100_percent_clear": "100_percent_clear",
+      "map_3_stars": "map_3_stars",
+      "threat_safe": "threat_safe",
+      "threat_safe_without_3_stars": "threat_safe_without_3_stars"
+    },
+    "StageIncrease": {
+      "name": "Enable Continuous Clear",
+      "help": "Suited for 100% Clear, requires sufficient fleet strength and satisfying level attribute restrictions for every level involved\n1-1 to 14-4, A1 to A3, B1 to B3, C1 to C3, D1 to D3, SP1 to SP4"
+    },
+    "GetNewShip": {
+      "name": "New Ship Get",
+      "help": "Stop current task if detected new ship has been acquired"
+    },
+    "ReachLevel120": {
+      "name": "Level 120 Reached",
+      "help": "Stop current task if all ships in fleet have reached level 120"
+    }
+  },
+  "Fleet": {
+    "_info": {
+      "name": "Fleet Settings",
+      "help": "Fleet 1 == Mob Fleet, Fleet 2 == Boss Fleet"
+    },
+    "Fleet1": {
+      "name": "Fleet 1 Number",
+      "help": "",
+      "1": "1",
+      "2": "2",
+      "3": "3",
+      "4": "4",
+      "5": "5",
+      "6": "6"
+    },
+    "Fleet1Formation": {
+      "name": "Fleet 1 Formation",
+      "help": "",
+      "line_ahead": "line_ahead",
+      "double_line": "double_line",
+      "diamond": "diamond"
+    },
+    "Fleet1Mode": {
+      "name": "Fleet 1 Mode",
+      "help": "",
+      "combat_auto": "combat_auto",
+      "combat_manual": "combat_manual",
+      "stand_still_in_the_middle": "stand_still_in_the_middle",
+      "hide_in_bottom_left": "hide_in_bottom_left"
+    },
+    "Fleet1Step": {
+      "name": "Fleet 1 Step Number",
+      "help": "Restrict tile step movement in non-cleared levels to configured number",
+      "2": "2",
+      "3": "3",
+      "4": "4",
+      "5": "5"
+    },
+    "Fleet2": {
+      "name": "Fleet 2 Number",
+      "help": "",
+      "0": "do_not_use",
+      "1": "1",
+      "2": "2",
+      "3": "3",
+      "4": "4",
+      "5": "5",
+      "6": "6"
+    },
+    "Fleet2Formation": {
+      "name": "Fleet 2 Formation",
+      "help": "",
+      "line_ahead": "line_ahead",
+      "double_line": "double_line",
+      "diamond": "diamond"
+    },
+    "Fleet2Mode": {
+      "name": "Fleet 2 Mode",
+      "help": "",
+      "combat_auto": "combat_auto",
+      "combat_manual": "combat_manual",
+      "stand_still_in_the_middle": "stand_still_in_the_middle",
+      "hide_in_bottom_left": "hide_in_bottom_left"
+    },
+    "Fleet2Step": {
+      "name": "Fleet 2 Step Number",
+      "help": "Restrict tile step movement in non-cleared levels to configured number",
+      "2": "2",
+      "3": "3",
+      "4": "4",
+      "5": "5"
+    },
+    "FleetOrder": {
+      "name": "Fleet Roles",
+      "help": "Effective only for normal operations, non auto search",
+      "fleet1_mob_fleet2_boss": "fleet1_mob_fleet2_boss",
+      "fleet1_boss_fleet2_mob": "fleet1_boss_fleet2_mob",
+      "fleet1_all_fleet2_standby": "fleet1_all_fleet2_standby",
+      "fleet1_standby_fleet2_all": "fleet1_standby_fleet2_all"
+    },
+    "AutoSearchFleetOrder": {
+      "name": "Fleet Roles in Auto Search",
+      "help": "Effective only for auto search, non normal operations",
+      "fleet1_mob_fleet2_boss": "fleet1_mob_fleet2_boss",
+      "fleet1_boss_fleet2_mob": "fleet1_boss_fleet2_mob",
+      "fleet1_all_fleet2_standby": "fleet1_all_fleet2_standby",
+      "fleet1_standby_fleet2_all": "fleet1_standby_fleet2_all"
+    }
+  },
+  "Submarine": {
+    "_info": {
+      "name": "Submarine Settings",
+      "help": ""
+    },
+    "Fleet": {
+      "name": "Submarine Fleet Number",
+      "help": "",
+      "0": "do_not_use",
+      "1": "1",
+      "2": "2"
+    },
+    "Mode": {
+      "name": "Submarine Mode",
+      "help": "",
+      "do_not_use": "do_not_use",
+      "hunt_only": "hunt_only",
+      "every_combat": "every_combat"
+    }
+  },
+  "Emotion": {
+    "_info": {
+      "name": "Emotion Settings",
+      "help": "At least one or both \"Calculate Emotion Consumption\" and \"Ignore Low Emotion Warning\" is used for these settings to be enabled"
+    },
+    "CalculateEmotion": {
+      "name": "Calculate Emotion Consumption",
+      "help": "Calculates emotion according to settings, if ship(s) have changed in fleet should manually edit the corresponding value for accuracy"
+    },
+    "IgnoreLowEmotionWarn": {
+      "name": "Ignore Low Emotion Warning",
+      "help": "If emotion warning triggers, it will be ignored and proceed into next battle regardless"
+    },
+    "Fleet1Value": {
+      "name": "Fleet 1 Emotion Value",
+      "help": ""
+    },
+    "Fleet1Record": {
+      "name": "Fleet 1 Emotion Record",
+      "help": ""
+    },
+    "Fleet1Control": {
+      "name": "Fleet 1 Emotion Control",
+      "help": "Measures will be taken to ensure control is maintained i.e. wait for recovery in level or stop current task if others can be executed while waiting",
+      "keep_exp_bonus": "Keep Happy Bonus (>120)",
+      "prevent_green_face": "Keep Content (>40)",
+      "prevent_yellow_face": "Prevent Moody (>30)",
+      "prevent_red_face": "Prevent Exhausted (>20)"
+    },
+    "Fleet1Recover": {
+      "name": "Fleet 1 Recover Location",
+      "help": "Configure accordingly to accurately calculate emotion",
+      "not_in_dormitory": "Docks (20/hr)",
+      "dormitory_floor_1": "Dorm Floor 1 (40/hr)",
+      "dormitory_floor_2": "Dorm Floor 2 (50/hr)"
+    },
+    "Fleet1Oath": {
+      "name": "Fleet 1 All Oath",
+      "help": "+10/hr emotion recovery is included into calculation"
+    },
+    "Fleet2Value": {
+      "name": "Fleet 2 Emotion Value",
+      "help": ""
+    },
+    "Fleet2Record": {
+      "name": "Fleet 2 Emotion Record",
+      "help": ""
+    },
+    "Fleet2Control": {
+      "name": "Fleet 2 Emotion Control",
+      "help": "Measures will be taken to ensure control is maintained i.e. wait for recovery in level or stop current task if others can be executed while waiting",
+      "keep_exp_bonus": "Keep Happy Bonus (>120)",
+      "prevent_green_face": "Keep Content (>40)",
+      "prevent_yellow_face": "Prevent Moody (>30)",
+      "prevent_red_face": "Prevent Exhausted (>20)"
+    },
+    "Fleet2Recover": {
+      "name": "Fleet 2 Recover Location",
+      "help": "",
+      "not_in_dormitory": "Docks (20/hr)",
+      "dormitory_floor_1": "Dorm Floor 1 (40/hr)",
+      "dormitory_floor_2": "Dorm Floor 2 (50/hr)"
+    },
+    "Fleet2Oath": {
+      "name": "Fleet 2 All Oath",
+      "help": "+10/hr emotion recovery is included into calculation"
+    }
+  },
+  "HpControl": {
+    "_info": {
+      "name": "HP Control Settings",
+      "help": "Effective only if fleet lock is disabled"
+    },
+    "UseHpBalance": {
+      "name": "Use HP Balance",
+      "help": "Enable monitor of HP across the front row ships and re-position them if needed"
+    },
+    "UseEmergencyRepair": {
+      "name": "Use Emergency Repair",
+      "help": ""
+    },
+    "UseLowHpRetreat": {
+      "name": "Use Low HP Retreat",
+      "help": ""
+    },
+    "HpBalanceThreshold": {
+      "name": "HP Balance Threshold",
+      "help": "If the difference in HP volume is found greater than this threshold then Alas will re-position the ships"
+    },
+    "HpBalanceWeight": {
+      "name": "HP Balance Weight",
+      "help": "Assists in Alas to accurately monitor the HP volume\nEnter your fleet data in the exemplified order \"front-most, middle, back-most\" --> \"6000, 3000, 4000\" (no quotations)"
+    },
+    "RepairUseSingleThreshold": {
+      "name": "Single Emergency Repair Use Threshold",
+      "help": "Use one repair kit if any one ship's HP is below this threshold"
+    },
+    "RepairUseMultiThreshold": {
+      "name": "Multi Emergency Repair Use Threshold",
+      "help": "Use all repair kits if the sum HP volume back or front row is below this threshold"
+    },
+    "LowHpRetreatThreshold": {
+      "name": "Low HP Retreat Threshold",
+      "help": "Retreat if the sum HP volume back or front row is below this threshold"
+    }
+  },
+  "Raid": {
+    "_info": {
+      "name": "Raid Settings",
+      "help": ""
+    },
+    "Mode": {
+      "name": "Raid Mode",
+      "help": "",
+      "easy": "easy",
+      "normal": "normal",
+      "hard": "hard"
+    },
+    "UseTicket": {
+      "name": "Use Ticket(s)",
+      "help": ""
+    }
+  },
+  "C11AffinityFarming": {
+    "_info": {
+      "name": "C1-1 Affinity Farm Settings",
+      "help": "After entering, repeatedly moves between tiles to initiate ambush encounters"
+    },
+    "RunCount": {
+      "name": "Encounter Count",
+      "help": "Number of encounters until retreat and repeating again, recommended 32+"
+    }
+  },
+  "C72MysteryFarming": {
+    "_info": {
+      "name": "C7-2 Mystery Farm Settings",
+      "help": "Performs minimum number of battles to acquire all mystery tiles then retreat and repeating again"
+    },
+    "StepOnA3": {
+      "name": "Step A3",
+      "help": "Effectively prevents mystery on A2 from being blocked"
+    }
+  },
+  "C122MediumLeveling": {
+    "_info": {
+      "name": "C12-2 Medium Level Farm Settings",
+      "help": "Use low strength fleet to level up at 12-2 and retreat after fighting all non-large escorts\nImprove exp/oil consumption ratio by reducing strength of fleet"
+    },
+    "LargeEnemyTolerance": {
+      "name": "Large Enemy Tolerance",
+      "help": "Number of large enemy battle(s) allowed before retreating",
+      "0": "0",
+      "1": "1",
+      "2": "2",
+      "10": "10"
+    }
+  },
+  "C124LargeLeveling": {
+    "_info": {
+      "name": "C12-4 Large Level Farm Settings",
+      "help": "Use high strength fleet to level up at 12-4 and retreat after fighting all escorts\nImprove exp/oil consumption ratio by reducing strength of fleet"
+    },
+    "NonLargeEnterTolerance": {
+      "name": "Non-Large Enter Tolerance",
+      "help": "Retreat after configured number of battles if no large escorts are detected",
+      "0": "0",
+      "1": "1",
+      "2": "2"
+    },
+    "NonLargeRetreatTolerance": {
+      "name": "Non-Large Retreat Tolerance",
+      "help": "Number of battles allowed against non-large escorts after no remaining large escorts are detected",
+      "0": "0",
+      "1": "1",
+      "2": "2",
+      "10": "10"
+    },
+    "PickupAmmo": {
+      "name": "Pick Up Ammo",
+      "help": "Number of battles before picking up ammo",
+      "3": "3",
+      "4": "4",
+      "5": "5"
+    }
+  },
+  "GemsFarming": {
+    "_info": {
+      "name": "Gem Farm Settings",
+      "help": "Warning: This is not an efficient way to farm gems, not a high-yield way to farm coins either.\nPlayers who have recently started Azur Lane are easily superstitious about 0LB and low oil consumption, while being ignorant about character leveling.\nRunning this function will only make you feel fulfilled however in reality your account will not actually progress very much.\nOnly F2P players can obtain meaningful income through this function. the developers hope this task be treated rationally.\n\nFleet 1 is expected to consist of 1 0LB CV/CVL and 1 0LB Vanguard, Fleet 2 is expected to consist of support ships such as New Jersey or Shinano to provide external battle assistance.\nFor information about the drop mechanism/rate of urgent commissions, you can refer to <https://bbs.nga.cn/read.php?tid=27134956> (in Chinese Simplified)"
+    },
+    "FlagshipChange": {
+      "name": "Enable Flagship Change",
+      "help": "Applies to fleet 1, switch out to new level 1 common CV/CVL after current has reached level 35+"
+    },
+    "FlagshipEquipChange": {
+      "name": "Enable Flagship Equipment Change",
+      "help": "The flagship's equipment is replaced when being switched out by first recording the current setup\nOnly populated equipment slots will be replaced\nIf the CV/CVL preference has been configured, all 5 slots will be populated otherwise only the auxiliary slots will be populated"
+    },
+    "VanguardChange": {
+      "name": "Enable Vanguard Change",
+      "help": "Applies to fleet 1, switch out to new level 1 common vanguard after current has reached level 35+"
+    },
+    "VanguardEquipChange": {
+      "name": "Enable Vanguard Equipment Change",
+      "help": "The vanguard's equipment is replaced when being switched out by first recording the current setup\nOnly populated equipment slots will be replaced"
+    },
+    "LowEmotionRetreat": {
+      "name": "Enable Low Emotion Retreat",
+      "help": "Retreat when low emotion is detected and switch out both back and front ships at the same time"
+    },
+    "CommonCV": {
+      "name": "Flagship Common CV/CVL Preference",
+      "help": "",
+      "any": "any",
+      "langley": "langley",
+      "bogue": "bogue",
+      "ranger": "ranger",
+      "hermes": "hermes"
+    }
+  },
+  "Commission": {
+    "_info": {
+      "name": "Commission Settings",
+      "help": ""
+    },
+    "DoMajorCommission": {
+      "name": "Do Major Commissions",
+      "help": "Enable allowance of undertaking 1200/1000 oil cost commissions; Commission Priority requires \"Major\" be included if enabled"
+    },
+    "CommissionFilter": {
+      "name": "Commission Priority",
+      "help": "Generally does not need to be modified or re-arranged but can do so if desired"
+    }
+  },
+  "Tactical": {
+    "_info": {
+      "name": "Tactical Academy Settings",
+      "help": ""
+    },
+    "TacticalFilter": {
+      "name": "Tactical Book Priority",
+      "help": "Generally does not need to be modified or re-arranged but can do so if desired"
+    }
+  },
+  "Research": {
+    "_info": {
+      "name": "Research Academy Settings",
+      "help": ""
+    },
+    "UseCube": {
+      "name": "Use Cube",
+      "help": "Allow to undertake projects that require cubes"
+    },
+    "UseCoin": {
+      "name": "Use Coin",
+      "help": "Allow to undertake projects that require coins"
+    },
+    "UsePart": {
+      "name": "Use Part/Plate",
+      "help": "Allow to undertake projects that require parts/plates"
+    },
+    "PresetFilter": {
+      "name": "Preset Filter Select",
+      "help": "For convenience a few preset filters are provided\nHowever it is recommended to use \"custom\" and author your own priority for projects\nNote that combined with other settings, Alas will choose projects that satisfy all the conditions. For example, if \"Use Cube\" is disabled but your list consists of projects that cost cubes, Alas will not choose them",
+      "custom": "custom",
+      "series_4": "series_4",
+      "series_3": "series_3",
+      "series_3_than_2": "series_3_than_2"
+    },
+    "CustomFilter": {
+      "name": "Custom Research Priority",
+      "help": "To use your own filter, set \"Preset Filter Select\" to \"custom\". All options have been defined at  <https://github.com/LmeSzinc/AzurLaneAutoScript/wiki/filter_string_en>"
+    }
+  },
+  "Dorm": {
+    "_info": {
+      "name": "Dorm Settings",
+      "help": ""
+    },
+    "Collect": {
+      "name": "Collect Coins and Loves",
+      "help": ""
+    },
+    "Feed": {
+      "name": "Restock Dorm Snacks",
+      "help": ""
+    },
+    "FeedFilter": {
+      "name": "Snack Filter",
+      "help": "Generally does not need to be modified or re-arranged but can do so if desired"
+    }
+  },
+  "Meowfficer": {
+    "_info": {
+      "name": "Mewofficer Settings",
+      "help": ""
+    },
+    "BuyAmount": {
+      "name": "Buy Amount",
+      "help": "The 1st meowfficer box purchase everyday is free"
+    },
+    "TrainMeowfficer": {
+      "name": "Collect Trained Meowfficer",
+      "help": "Collects 1 trained meowfficer each day, until Sunday in which Alas will collect all of them at once in order to complete daily missions\nThen fills the training queue to full for the upcoming new week to start again\nMust manually free up cattery space to receive trained meowfficers"
+    },
+    "FortChoreMeowfficer": {
+      "name": "Do Fort Chores",
+      "help": "Completes all 3 chores; clean, feed, and play with meowfficer to get fort exp"
+    }
+  },
+  "GuildLogistics": {
+    "_info": {
+      "name": "Guild Logistics Settings",
+      "help": "Master or Officers must choose a guild mission manually"
+    },
+    "Enable": {
+      "name": "Enable Guild Logistics",
+      "help": "Enables the following:\n- Accept and complete guild missions\n- Submit items in exchange for guild coins\n- Collect other guild rewards"
+    },
+    "ExchangeFilter": {
+      "name": "Item Exchange Filter",
+      "help": "Generally does not need to be modified or re-arranged but can do so if desired\nIf there is an item that you lack, priority for that exchange is lowered"
+    }
+  },
+  "GuildOperation": {
+    "_info": {
+      "name": "Guild Operation Settings",
+      "help": "Master or Officers must choose a guild operation manually"
+    },
+    "Enable": {
+      "name": "Enable Guild Operation",
+      "help": "Enables the following:\n- Join ongoing guild operations\n- Dispatch ships to complete objectives\n- Optionally attack guild boss when available"
+    },
+    "JoinThreshold": {
+      "name": "Join Threshold",
+      "help": "0.0 ~ 1.0\n0.5 means only join when progress is less than halfway through\n1 means join regardless of current progress even if basically finished\nRemember you are limited to joining only 2 on a monthly basis\nMaximize rewards and participation by joining newly started operations"
+    },
+    "AttackBoss": {
+      "name": "Attack Guild Boss",
+      "help": ""
+    },
+    "BossFleetRecommend": {
+      "name": "Enable Fleet Recommend",
+      "help": "This will automatically select your own ships to fill all 6 ship slots\nRecommended to keep disabled to form your own fleet along with fellow member's support units\nHowever if members are frequently changing their support units, may be worth to enable otherwise attacks only with 4 ships"
+    }
+  },
+  "Reward": {
+    "_info": {
+      "name": "Reward Settings",
+      "help": ""
+    },
+    "CollectOil": {
+      "name": "Collect Oil",
+      "help": ""
+    },
+    "CollectCoin": {
+      "name": "Collect Coin",
+      "help": ""
+    },
+    "CollectExp": {
+      "name": "Collect Experience Books",
+      "help": ""
+    },
+    "CollectMission": {
+      "name": "Collect Mission Rewards",
+      "help": ""
+    }
+  },
+  "GeneralShop": {
+    "_info": {
+      "name": "General Shop Settings",
+      "help": ""
+    },
+    "UseGems": {
+      "name": "Use Gems",
+      "help": ""
+    },
+    "Refresh": {
+      "name": "Allow Shop Refresh",
+      "help": "Refreshing will consume 50 gems"
+    },
+    "Filter": {
+      "name": "Item Filter",
+      "help": "All options have been defined at <https://github.com/LmeSzinc/AzurLaneAutoScript/wiki/reward_shop_filter_string>"
+    }
+  },
+  "GuildShop": {
+    "_info": {
+      "name": "Guild Shop Settings",
+      "help": ""
+    },
+    "Refresh": {
+      "name": "Allow Shop Refresh",
+      "help": "Refreshing will consume 50 guild coins, these are not valuable and it is recommended to have this enabled"
+    },
+    "Filter": {
+      "name": "Item Filter",
+      "help": "All options have been defined at <https://github.com/LmeSzinc/AzurLaneAutoScript/wiki/reward_shop_filter_string>\nHowever unlike other shops you cannot specify the exact item, you are limited to just category and grade\nThe select options below are used to substitute this incapability"
+    },
+    "BOX_T3": {
+      "name": "Faction Preference BoxT3",
+      "help": "",
+      "eagle": "eagle",
+      "royal": "royal",
+      "sakura": "sakura",
+      "ironblood": "ironblood"
+    },
+    "BOX_T4": {
+      "name": "Faction Preference BoxT4",
+      "help": "",
+      "eagle": "eagle",
+      "royal": "royal",
+      "sakura": "sakura",
+      "ironblood": "ironblood"
+    },
+    "BOOK_T2": {
+      "name": "Color Preference BookT2",
+      "help": "",
+      "red": "red",
+      "blue": "blue",
+      "yellow": "yellow"
+    },
+    "BOOK_T3": {
+      "name": "Color Preference BookT3",
+      "help": "",
+      "red": "red",
+      "blue": "blue",
+      "yellow": "yellow"
+    },
+    "RETROFIT_T2": {
+      "name": "Type Preference RetrofitT2",
+      "help": "",
+      "dd": "dd",
+      "cl": "cl",
+      "bb": "bb",
+      "cv": "cv"
+    },
+    "RETROFIT_T3": {
+      "name": "Type Preference RetrofitT3",
+      "help": "",
+      "dd": "dd",
+      "cl": "cl",
+      "bb": "bb",
+      "cv": "cv"
+    },
+    "PLATE_T2": {
+      "name": "Type Preference PlateT2",
+      "help": "",
+      "general": "general",
+      "gun": "gun",
+      "torpedo": "torpedo",
+      "antiair": "antiair",
+      "plane": "plane"
+    },
+    "PLATE_T3": {
+      "name": "Type Preference PlateT3",
+      "help": "",
+      "general": "general",
+      "gun": "gun",
+      "torpedo": "torpedo",
+      "antiair": "antiair",
+      "plane": "plane"
+    },
+    "PLATE_T4": {
+      "name": "Type Preference PlateT4",
+      "help": "",
+      "general": "general",
+      "gun": "gun",
+      "torpedo": "torpedo",
+      "antiair": "antiair",
+      "plane": "plane"
+    },
+    "PR1": {
+      "name": "PR1 BP Preference",
+      "help": "",
+      "neptune": "neptune",
+      "monarch": "monarch",
+      "ibuki": "ibuki",
+      "izumo": "izumo",
+      "roon": "roon",
+      "saintlouis": "saintlouis"
+    },
+    "PR2": {
+      "name": "PR2 BP Preference",
+      "help": "",
+      "seattle": "seattle",
+      "georgia": "georgia",
+      "kitakaze": "kitakaze",
+      "gascogne": "gascogne"
+    },
+    "PR3": {
+      "name": "PR3 BP Preference",
+      "help": "",
+      "cheshire": "cheshire",
+      "mainz": "mainz",
+      "odin": "odin",
+      "champagne": "champagne"
+    }
+  },
+  "MedalShop": {
+    "_info": {
+      "name": "Medal Shop Settings",
+      "help": ""
+    },
+    "Filter": {
+      "name": "Item Filter",
+      "help": "All options have been defined at <https://github.com/LmeSzinc/AzurLaneAutoScript/wiki/reward_shop_filter_string>"
+    }
+  },
+  "MeritShop": {
+    "_info": {
+      "name": "Merit Shop Settings",
+      "help": ""
+    },
+    "Refresh": {
+      "name": "Allow Shop Refresh",
+      "help": "Refreshing will consume 50 gems"
+    },
+    "Filter": {
+      "name": "Item Filter",
+      "help": "All options have been defined at <https://github.com/LmeSzinc/AzurLaneAutoScript/wiki/reward_shop_filter_string>"
+    }
+  },
+  "Shipyard": {
+    "_info": {
+      "name": "Shipyard Settings",
+      "help": ""
+    },
+    "ResearchSeries": {
+      "name": "Research Series",
+      "help": ""
+    },
+    "ShipIndex": {
+      "name": "Ship Index",
+      "help": "Position varies depending on progress, so must manually verify the target ship's position yourself\nStarting from left to right; 1 ~ 6"
+    },
+    "BuyAmount": {
+      "name": "Buy Amount",
+      "help": "The 1st and 2nd purchase everyday are free\nDiscounts are applied to the 3rd and onwards, gradually minimizing until full price\nExact discounts found at <https://azurlane.koumakan.jp/Research#Strengthening>"
+    }
+  },
+  "Gacha": {
+    "_info": {
+      "name": "Gacha Settings",
+      "help": "Submit new build order(s) for daily achievement\nPrevious orders will be dequeued before submission to allow for maximum inputs and if any are still in progress, drills will be used to expedite them\nRetirement settings will be enforced if dock is full"
+    },
+    "Pool": {
+      "name": "Pool",
+      "help": "",
+      "light": "light",
+      "heavy": "heavy",
+      "special": "special",
+      "event": "event",
+      "wishing_well": "wishing_well"
+    },
+    "Amount": {
+      "name": "Amount",
+      "help": "",
+      "1": "1",
+      "2": "2",
+      "3": "3",
+      "4": "4",
+      "5": "5",
+      "6": "6",
+      "7": "7",
+      "8": "8",
+      "9": "9",
+      "10": "10"
+    },
+    "UseDrill": {
+      "name": "Use Drill(s)",
+      "help": "Expedite the recently submitted orders"
+    }
+  },
+  "Daily": {
+    "_info": {
+      "name": "Daily Settings",
+      "help": ""
+    },
+    "UseDailySkip": {
+      "name": "Use Daily Skip",
+      "help": "Requires S Rank for respective missions to be unlocked\nIf not unlocked, then Alas will automatically fallback to traditional steps to complete the mission"
+    },
+    "EscortMission": {
+      "name": "Escort Mission Preference",
+      "help": "",
+      "skip": "skip",
+      "first": "first",
+      "second": "second",
+      "third": "third"
+    },
+    "EscortMissionFleet": {
+      "name": "Escort Mission Fleet",
+      "help": "",
+      "1": "1",
+      "2": "2",
+      "3": "3",
+      "4": "4",
+      "5": "5",
+      "6": "6"
+    },
+    "AdvanceMission": {
+      "name": "Advance Mission Preference",
+      "help": "",
+      "skip": "skip",
+      "first": "first",
+      "second": "second",
+      "third": "third"
+    },
+    "AdvanceMissionFleet": {
+      "name": "Advance Mission Fleet",
+      "help": "",
+      "1": "1",
+      "2": "2",
+      "3": "3",
+      "4": "4",
+      "5": "5",
+      "6": "6"
+    },
+    "FierceAssault": {
+      "name": "Fierce Assault Preference",
+      "help": "",
+      "skip": "skip",
+      "first": "first",
+      "second": "second",
+      "third": "third"
+    },
+    "FierceAssaultFleet": {
+      "name": "Fierce Assault Fleet",
+      "help": "",
+      "1": "1",
+      "2": "2",
+      "3": "3",
+      "4": "4",
+      "5": "5",
+      "6": "6"
+    },
+    "TacticalTraining": {
+      "name": "Tactical Training Preference",
+      "help": "",
+      "skip": "skip",
+      "first": "first",
+      "second": "second",
+      "third": "third"
+    },
+    "TacticalTrainingFleet": {
+      "name": "Tactical Training Fleet",
+      "help": "",
+      "1": "1",
+      "2": "2",
+      "3": "3",
+      "4": "4",
+      "5": "5",
+      "6": "6"
+    },
+    "SupplyLineDisruption": {
+      "name": "Supply Line Disruption Preference",
+      "help": "This will be skipped if daily skip has not been unlocked",
+      "skip": "skip",
+      "first": "first",
+      "second": "second",
+      "third": "third"
+    }
+  },
+  "Hard": {
+    "_info": {
+      "name": "Hard Settings",
+      "help": "Hard mode for chapter must be unlocked, stage must be in SAFE condition, and auto search is enabled temporarily.\nUse Farm Main task to assist unlocking and achieving SAFE conditions"
+    },
+    "HardStage": {
+      "name": "Hard Stage",
+      "help": "11-4, 12-2, 12-4, and etc."
+    },
+    "HardFleet": {
+      "name": "Hard Fleet",
+      "help": "Must in game manually set up the fleet and ensure level attribute restrictions are satisfied",
+      "1": "1",
+      "2": "2"
+    }
+  },
+  "Exercise": {
+    "_info": {
+      "name": "Exercise Settings",
+      "help": "Runs exercise and automatically retreats when sum HP volume is low"
+    },
+    "OpponentChooseMode": {
+      "name": "Opponent Choose Mode",
+      "help": "",
+      "max_exp": "max_exp",
+      "easiest": "easiest",
+      "leftmost": "leftmost",
+      "easiest_else_exp": "easiest_else_exp"
+    },
+    "OpponentTrial": {
+      "name": "Each Opponent Try X Time(s)",
+      "help": "1 ~ Positive Infinity"
+    },
+    "ExercisePreserve": {
+      "name": "Keep X Number Remain(s)",
+      "help": "1 ~ 10\n1 means run until 1/10"
+    },
+    "LowHpThreshold": {
+      "name": "Low HP Threshold",
+      "help": "0.0 ~ 1.0\nChecks the top HP bar"
+    },
+    "LowHpConfirmWait": {
+      "name": "Low HP Confirm Wait",
+      "help": "After HP is below the threshold, Alas will confirm the retreat after the configured period of time\nRecommend 1.0 ~ 3.0\nFor cases if both you and the opponent are on the verge but waiting an additional seconds can be the difference between victory or loss"
+    },
+    "OpponentRefreshValue": {
+      "name": "Refreshed X Time(s)",
+      "help": "Automatically updated, resets back to 0 daily\nIf you manually refresh, you should update this count"
+    },
+    "OpponentRefreshRecord": {
+      "name": "Last Refresh Record",
+      "help": ""
+    }
+  },
+  "Sos": {
+    "_info": {
+      "name": "SOS Settings",
+      "help": ""
+    },
+    "Chapter": {
+      "name": "SOS Chapter",
+      "help": "",
+      "3": "3",
+      "4": "4",
+      "5": "5",
+      "6": "6",
+      "7": "7",
+      "8": "8",
+      "9": "9",
+      "10": "10"
+    }
+  },
+  "EventAb": {
+    "_info": {
+      "name": "EventAB Settings",
+      "help": ""
+    },
+    "StageFilter": {
+      "name": "EventAB Stage Filter",
+      "help": ""
+    },
+    "LastStage": {
+      "name": "Last EventAB Stage",
+      "help": "Automatically updated, skips completed levels in the filter, and resets at server reset time (00:00)"
+    }
+  },
+  "RaidDaily": {
+    "_info": {
+      "name": "Raid Daily Settings",
+      "help": "Recommend manual play for faster contribution and climbing of prize ladder as raid points are awarded proportionally by speed\nEnable task if slow contribution and climbing is acceptable\nFleet compositions must be made manually for each difficulty"
+    },
+    "StageFilter": {
+      "name": "Raid Daily Stage Filter",
+      "help": "Generally does not need to be modified or re-arranged but can do so if desired\nCan save on oil consumption if less are attacked"
+    }
+  },
+  "OpsiAshAssist": {
+    "_info": {
+      "name": "OpSi Ash Assist Settings",
+      "help": "Limited to 3 everyday"
+    },
+    "Tier": {
+      "name": "Target Level Beacons >= X",
+      "help": "If target level beacon cannot be found, Alas will choose the next available level beacon regardless of conditions"
+    }
+  },
+  "OpsiGeneral": {
+    "_info": {
+      "name": "OpSi General Settings",
+      "help": "All OpSi activities will use these settings"
+    },
+    "AshAttack": {
+      "name": "Enable Ash Attack",
+      "help": "When data beacon is full; call for assistance then attack until ash has been completed"
+    },
+    "BuyActionPoint": {
+      "name": "Buy AP",
+      "help": "Restore AP through oil first then AP boxes"
+    },
+    "OilLimit": {
+      "name": "Keep Oil Above X",
+      "help": "Refrain buying AP if below this number"
+    },
+    "RepairThreshold": {
+      "name": "Repair Threshold",
+      "help": "After completion of an OpSi map; if any one ship's HP is below threshold, retreat back to nearest port for repairs\n0.0 ~ 1.0"
+    },
+    "BuyAkashiShop": {
+      "name": "Visit Akashi Shop",
+      "help": "After completion of an OpSi map; if detected, visit Akashi for exclusive limited items"
+    },
+    "AkashiShopFilter": {
+      "name": "Akashi Shop Filter",
+      "help": "Generally does not need to be modified or re-arranged but can do so if desired\nBuy AP boxes and Purple Coins"
+    }
+  },
+  "OpsiExplore": {
+    "_info": {
+      "name": "OpSi Explore Settings",
+      "help": "At the beginning of each month OpSi is reset\nThe following must be satisfied:\n- Manually confirm fleet deployment into OpSi\n- OpSi story must be complete\n- Start dock in New York port\n- Turn off other OpSi tasks (Obscure, Meowfficer, etc.)\nEach zone will be visited in a clockwise direction every 30 minutes until world has been been completely opened\nNo need to consume 5000 oil for special radar in OpSi shop"
+    },
+    "LastZone": {
+      "name": "Last Zone Completed",
+      "help": "Automatically updated with map ID\nReplace with 0 to reset progress\nAlready completed zones will be skipped"
+    }
+  },
+  "OpsiDaily": {
+    "_info": {
+      "name": "OpSi Daily Settings",
+      "help": "Completes OpSi daily activities\nThe following must be satisfied:\n- OpSi story must be complete\n- Zones must be unlocked either by OpSi explore or consuming 5000 oil for special radar in OpSi shop"
+    },
+    "BuySupply": {
+      "name": "Buy From Port Shops",
+      "help": "Buy all items from port shops\nShop inventory consists of a fixed pool that is reset monthly, items not bought during a cycle has the chance of re-appearing and blocking preferable high value items"
+    },
+    "DoMission": {
+      "name": "Do Port Mission(s)",
+      "help": "Accept and complete mission(s) from ports"
+    }
+  },
+  "OpsiObscure": {
+    "_info": {
+      "name": "OpSi Obscure Settings",
+      "help": "Clear obscure zones every 30 minutes\nThe following must be satisfied:\n- OpSi story must be complete\n- Zones must be unlocked either by OpSi explore or consuming 5000 oil for special radar in OpSi shop"
+    },
+    "UseLogger": {
+      "name": "Use Logger(s)",
+      "help": ""
+    },
+    "CallSubmarine": {
+      "name": "Call Submarine",
+      "help": "If enabled, interval increases from 30 to 60 minutes instead"
+    },
+    "ForceRun": {
+      "name": "Force Run",
+      "help": "Ignore interval, clear all obscure zones, and use AP to submit scan orders (and submarine if enabled)\nGenerally not needed to force run, just run in intervals unless in a rush"
+    }
+  },
+  "OpsiMeowfficerFarming": {
+    "_info": {
+      "name": "OpSi Meowfficer Farm Settings",
+      "help": "Attack target zones of the specified hazard level in a clockwise direction\nThe following must be satisfied:\n- OpSi story must be complete\n- Zones must be unlocked either by OpSi explore or consuming 5000 oil for special radar in OpSi shop"
+    },
+    "ActionPointPreserve": {
+      "name": "Keep X Amount of AP",
+      "help": "Stops task if total AP (including AP boxes in inventory) is below this number"
+    },
+    "HazardLevel": {
+      "name": "Target Zone Hazard Level",
+      "help": "Recommend 3 or 5 as these have higher meowfficer ratio to AP cost",
+      "1": "1",
+      "2": "2",
+      "3": "3",
+      "4": "4",
+      "5": "5",
+      "6": "6"
+    },
+    "TargetZone": {
+      "name": "Target Zone ID",
+      "help": "Support zone ID and zone name. After specifying the sea area, it will circulate in the sea area\nFill in the default value of 0, or delete the value to cancel the specify"
+    }
+  },
+  "Daemon": {
+    "_info": {
+      "name": "Semi-auto Clicking",
+      "help": "Useful when attacking a stage that has not yet been adapted by Alas, can save on tons of manual clicks\nAlas will click combat preparation, click combat drop, skip story, auto-retire, and close popups\nYou only need to move your attacking fleet if movement is restricted and choose the enemies yourself"
+    },
+    "EnterMap": {
+      "name": "Auto Click Stage Preparation",
+      "help": "Prepare your fleets before running this tool if enabled"
+    }
+  },
+  "OpsiDaemon": {
+    "_info": {
+      "name": "OpSi Semi-auto Clicking",
+      "help": "Useful when attacking logger zones or OpSi story, can save on tons of manual clicks\nAlas will click combat preparation, click combat drop, skip story, and close popups\nYou only need to choose the enemies and switch to different zones yourself"
+    },
+    "RepairShip": {
+      "name": "Repair Ships When Nearing Port",
+      "help": "Once a fleet is in range of a port, Alas will enter, repair your ships, then exit\nWhen it is done, please move the fleet away and out of range from the port within 30s, otherwise the actions will be repeated"
+    }
+  },
+  "Benchmark": {
+    "_info": {
+      "name": "Performance Test",
+      "help": "Test which screenshot method and click method combination is the fastest and best for you\nSpeed can vary on the emulator being used and your PC build"
+    },
+    "TestScreenshotMethod": {
+      "name": "Test Screenshots Methods",
+      "help": ""
+    },
+    "TestClickMethod": {
+      "name": "Test Click Methods",
+      "help": ""
+    }
+  },
+  "AzurLaneUncensored": {
+    "_info": {
+      "name": "[CN] Uncensored Patch",
+      "help": "Applicable to CN only\nAzurLaneUncensored files are downloaded if not present otherwise updated to the latest revision\nThese files are then pushed into the emulator and restarts AL afterwards to complete the patching process"
+    },
+    "Repository": {
+      "name": "AzurLaneUncensored Repository",
+      "help": "Do not need to modify\nGithub: <https://github.com/LmeSzinc/AzurLaneUncensored>\nCN mirror: <https://gitee.com/LmeSzinc/AzurLaneUncensored>"
+    }
+  },
+  "Gui": {
+    "Aside": {
+      "Install": "Install",
+      "Develop": "Develop",
+      "Performance": "Perf.",
+      "Setting": "Settings",
+      "AddAlas": "Add"
+    },
+    "Button": {
+      "Start": "Start",
+      "Stop": "Stop",
+      "ScrollON": "Auto Scroll ON",
+      "ScrollOFF": "OFF",
+      "ClearLog": "Clear Log",
+      "Setting": "Setting"
+    },
+    "Toast": {
+      "DisableTranslateMode": "Click here to disable translate mode",
+      "ConfigSaved": "Config saved",
+      "AlasIsRunning": "Scheduler is already running"
+    },
+    "Status": {
+      "Running": "Running",
+      "Inactive": "Inactive",
+      "Warning": "Warning"
+    },
+    "MenuAlas": {
+      "Overview": "Overview",
+      "Log": "Logs"
+    },
+    "MenuDevelop": {
+      "HomePage": "Home",
+      "Translate": "Translate"
+    },
+    "Overview": {
+      "Scheduler": "Scheduler",
+      "Log": "Log",
+      "Running": "Running",
+      "Pending": "Pending",
+      "Waiting": "Waiting",
+      "NoTask": "No Task"
+    },
+    "AddAlas": {
+      "PopupTitle": "Add new config",
+      "NewName": "New name",
+      "CopyFrom": "Copy from existing config",
+      "Confirm": "Add",
+      "FileExist": "A config with the same name exists, please choose another one"
+    }
+  }
+}

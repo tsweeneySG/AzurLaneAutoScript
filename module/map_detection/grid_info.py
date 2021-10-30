@@ -1,5 +1,4 @@
 from module.base.utils import location2node
-from module.logger import logger
 
 
 class GridInfo:
@@ -62,6 +61,8 @@ class GridInfo:
     mechanism_trigger = None  # SelectedGrids
     mechanism_block = None  # SelectedGrids
     mechanism_wait = 2  # Seconds to wait the mechanism unlock animation
+    is_fortress = False  # Machine fortress
+    is_flare = False
     cost = 9999
     cost_1 = 9999
     cost_2 = 9999
@@ -116,6 +117,7 @@ class GridInfo:
             'ss': 'is_submarine',
             'MY': 'is_mystery',
             'AM': 'is_ammo',
+            'FR': 'is_fortress',
             '==': 'is_cleared'
         }
         for key, value in dic.items():
@@ -141,7 +143,7 @@ class GridInfo:
 
     @property
     def is_sea(self):
-        return False if self.is_land or self.is_enemy or self.is_siren or self.is_boss else True
+        return False if self.is_land or self.is_enemy or self.is_siren or self.is_fortress or self.is_boss else True
 
     @property
     def may_carrier(self):
@@ -208,7 +210,10 @@ class GridInfo:
         if info.is_enemy:
             if not self.is_land and (self.may_enemy or self.is_carrier):
                 self.is_enemy = True
-                if info.enemy_scale:
+                if info.enemy_scale and not (self.enemy_scale):
+                    self.enemy_scale = info.enemy_scale
+                if info.enemy_scale == 3 and info.enemy_scale == 2:
+                    # But allow 3 overwrites 2
                     self.enemy_scale = info.enemy_scale
                 if info.enemy_genre and not (info.enemy_genre == 'Enemy' and self.enemy_genre):
                     self.enemy_genre = info.enemy_genre
@@ -256,6 +261,7 @@ class GridInfo:
         self.is_boss = False
         self.is_ammo = False
         self.is_siren = False
+        self.is_fortress = False
         self.is_caught_by_siren = False
         self.is_carrier = False
         self.is_movable = False

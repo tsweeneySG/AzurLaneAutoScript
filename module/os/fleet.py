@@ -1,11 +1,12 @@
 from module.base.button import *
-from module.base.decorator import Config
 from module.base.timer import Timer
 from module.base.utils import *
+from module.exception import MapWalkError
 from module.logger import logger
 from module.map.fleet import Fleet
 from module.map.map_grids import SelectedGrids
 from module.map.utils import location_ensure
+from module.os.assets import TEMPLATE_EMPTY_HP
 from module.os.camera import OSCamera
 from module.os.map_base import OSCampaignMap
 from module.os_ash.ash import OSAsh
@@ -23,31 +24,18 @@ class OSFleet(OSCamera, Combat, Fleet, OSAsh):
             self.camera = location
             self.update()
 
-    def map_init(self, map_=None):
+    def map_data_init(self, map_=None):
+        """
+        Create new map object, and use the shape of current zone
+        """
         map_ = OSCampaignMap()
         map_.shape = self.zone.shape
+        super().map_data_init(map_)
 
-        logger.hr('Map init')
-        self.fleet_1_location = ()
-        self.fleet_2_location = ()
-        self.fleet_current_index = 1
-        self.battle_count = 0
-        self.mystery_count = 0
-        self.carrier_count = 0
-        self.siren_count = 0
-        self.ammo_count = 3
-        self.map = map_
-        self.map.reset()
-        self.handle_map_green_config_cover()
-        self.map.poor_map_data = self.config.POOR_MAP_DATA
-        self.map.load_map_data(use_loop=self.map_is_clear_mode)
-        self.map.load_spawn_data(use_loop=self.map_is_clear_mode)
-        self.map.load_mechanism(land_based=self.config.MAP_HAS_LAND_BASED)
-        self.map.grid_connection_initial(
-            wall=self.config.MAP_HAS_WALL,
-            portal=self.config.MAP_HAS_PORTAL,
-        )
-
+    def map_control_init(self):
+        """
+        Remove non-exist things like strategy, round.
+        """
         # self.handle_strategy(index=1 if not self.fleets_reversed() else 2)
         # self.update()
         # if self.handle_fleet_reverse():
@@ -127,8 +115,27 @@ class OSFleet(OSCamera, Combat, Fleet, OSAsh):
 
         return hp_grid
 
-    def hp_withdraw_triggered(self):
+    def hp_retreat_triggered(self):
         return False
+
+    def hp_get(self):
+        """
+        Calculate current HP, also detects the wrench (Ship died, need to repair)
+        """
+        super().hp_get()
+        ship_icon = self._hp_grid().crop((0, -67, 67, 0))
+        need_repair = [TEMPLATE_EMPTY_HP.match(self.image_area(button)) for button in ship_icon.buttons]
+        logger.attr('Repair icon', need_repair)
+
+        for index, repair in enumerate(need_repair):
+            if repair:
+                self._hp_has_ship[self.fleet_current_index][index] = True
+                self._hp[self.fleet_current_index][index] = 0
+
+        logger.attr('HP', ' '.join(
+            [str(int(data * 100)).rjust(3) + '%' if use else '____' for data, use in zip(self.hp, self.hp_has_ship)]))
+
+        return self.hp
 
     def lv_get(self, after_battle=False):
         pass
@@ -191,24 +198,39 @@ class OSFleet(OSCamera, Combat, Fleet, OSAsh):
         In OpSi, camera always focus to fleet when fleet is moving which mess up `self.goto()`.
         In most situation, we use auto search to clear a map in OpSi, and classic methods are deprecated.
         But we still need to move fleet toward port, this method is for this situation.
-        """
-        view = self.os_default_view
 
+        Raises:
+            MapWalkError: If unable to goto such grid.
+                Probably clicking at land, center of port, or fleet itself.
+        """
         while 1:
+            # Calculate destination
             port = self.radar.port_predict(self.device.image)
-            view.load(self.device.image)
             logger.info(f'Port route at {port}')
             if np.linalg.norm(port) == 0:
                 logger.info('Arrive port')
                 break
 
+            # Update local view
+            self.update_os()
+            self.view.predict()
+            self.view.show()
+
+            # Click way point
             port = point_limit(port, area=(-4, -2, 3, 2))
-            port = view[np.add(port, view.center_loca)]
+            port = self.convert_radar_to_local(port)
             self.device.click(port)
+
+            # Wait until arrived
             prev = (0, 0)
             confirm_timer = Timer(1, count=2).start()
+            backup = self.config.temporary(MAP_HAS_FLEET_STEP=True)
             while 1:
                 self.device.screenshot()
+
+                if self.handle_walk_out_of_step():
+                    backup.recover()
+                    raise MapWalkError('walk_out_of_step')
 
                 self.radar.port_predict(self.device.image)
                 if np.linalg.norm(np.subtract(self.radar.port_loca, prev)) < 1:
@@ -218,3 +240,5 @@ class OSFleet(OSCamera, Combat, Fleet, OSAsh):
                     confirm_timer.reset()
 
                 prev = self.radar.port_loca
+
+            backup.recover()

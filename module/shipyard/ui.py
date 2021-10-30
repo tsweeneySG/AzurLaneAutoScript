@@ -8,7 +8,7 @@ from module.ui.ui import UI
 
 
 class ShipyardUI(UI):
-    def _shipyard_appear_max(self):
+    def _shipyard_cannot_strengthen(self):
         """
         Shorthand for appear if a ship can no longer
         be strengthened either in 'DEV' or 'FATE'
@@ -17,8 +17,10 @@ class ShipyardUI(UI):
         Returns:
             bool if appear
         """
-        if self.appear(SHIPYARD_PROGRESS_DEV, offset=(20, 20)) or \
-                self.appear(SHIPYARD_PROGRESS_FATE, offset=(20, 20)):
+        if self.appear(SHIPYARD_PROGRESS_DEV, offset=(20, 20)) \
+                or self.appear(SHIPYARD_PROGRESS_FATE, offset=(20, 20)) \
+                or self.appear(SHIPYARD_LEVEL_NOT_ENOUGH_FATE, offset=(20, 20)) \
+                or self.appear(SHIPYARD_LEVEL_NOT_ENOUGH_DEV, offset=(20, 20)):
             logger.info('Ship at full strength for current level, '
                         'no more BPs can be consumed')
             return True
@@ -109,7 +111,7 @@ class ShipyardUI(UI):
             logger.warning(f'Research Series {series} is not selectable')
             return False
 
-        self.ui_click(SHIPYARD_SERIES_SELECT_ENTER,
+        self.ui_click(SHIPYARD_SERIES_SELECT_ENTER, appear_button=SHIPYARD_UI_CHECK,
                       check_button=SHIPYARD_SERIES_SELECT_CHECK,
                       skip_first_screenshot=skip_first_screenshot)
         series_button = SHIPYARD_SERIES_GRID.buttons[series - 1]
@@ -218,10 +220,14 @@ class ShipyardUI(UI):
         Handles screen transitions to use/buy BPs
 
         Args:
+            text (str): for handle_popup_confirm
             skip_first_screenshot (bool):
         """
         success = False
-        button = globals()[f'SHIPYARD_CONFIRM_{self._shipyard_get_append()}']
+        append = self._shipyard_get_append()
+        button = globals()[f'SHIPYARD_CONFIRM_{append}']
+        ocr = globals()[f'OCR_SHIPYARD_TOTAL_{append}']
+        ocr_timer = Timer(10, count=10).start()
         self.interval_clear(button)
 
         while 1:
@@ -230,21 +236,34 @@ class ShipyardUI(UI):
             else:
                 self.device.screenshot()
 
+            if ocr_timer.reached():
+                logger.warning('Failed to detect for normal exit routine, resort to OCR check')
+                current = ocr.ocr(self.device.image)
+                if not current:
+                    logger.info('Confirm action has completed, setting flag for exit')
+                    self.interval_reset(button)
+                    success = True
+                ocr_timer.reset()
+                continue
+
             if self.appear_then_click(button, offset=(20, 20), interval=3):
                 continue
 
             if self.handle_popup_confirm(text):
                 self.interval_reset(button)
+                ocr_timer.reset()
                 continue
 
             if self.story_skip():
                 self.interval_reset(button)
                 success = True
+                ocr_timer.reset()
                 continue
 
             if self.handle_info_bar():
                 self.interval_reset(button)
                 success = True
+                ocr_timer.reset()
                 continue
 
             # End

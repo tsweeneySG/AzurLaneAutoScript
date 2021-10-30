@@ -3,7 +3,7 @@ from module.campaign.campaign_ocr import CampaignOcr
 from module.exception import CampaignNameError, ScriptEnd
 from module.logger import logger
 from module.ui.switch import Switch
-from module.ui.ui import UI
+from module.ui.ui import UI, page_campaign, page_event, page_sp
 
 STAGE_SHOWN_WAIT = (1, 1.2)
 MODE_SWITCH_1 = Switch('Mode_switch_1', offset=(30, 10))
@@ -85,7 +85,7 @@ class CampaignUI(UI, CampaignOcr):
         chapter, _ = self._campaign_separate_name(name)
 
         if chapter.isdigit():
-            self.ui_weigh_anchor()
+            self.ui_goto(page_campaign)
             self.campaign_ensure_mode('normal')
             self.campaign_ensure_chapter(index=chapter)
             if mode == 'hard':
@@ -122,3 +122,10 @@ class CampaignUI(UI, CampaignOcr):
 
         logger.warning('Campaign name error')
         raise ScriptEnd('Campaign name error')
+
+    def commission_notice_show_at_campaign(self):
+        """
+        Returns:
+            bool: If any commission finished.
+        """
+        return self.appear(page_campaign.check_button, offset=(20, 20)) and self.appear(COMMISSION_NOTICE_AT_CAMPAIGN)

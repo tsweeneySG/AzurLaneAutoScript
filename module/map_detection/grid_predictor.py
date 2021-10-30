@@ -1,5 +1,6 @@
 from module.base.utils import *
 from module.config.config import AzurLaneConfig
+from module.exception import ScriptError
 from module.logger import logger
 from module.map_detection.utils import *
 from module.map_detection.utils_assets import *
@@ -67,7 +68,8 @@ class GridPredictor:
             self.is_fleet = False
         else:
             self.is_fleet = self.predict_fleet()
-        self.is_mystery = self.predict_mystery()
+        if self.config.MAP_HAS_MYSTERY:
+            self.is_mystery = self.predict_mystery()
         self.is_current_fleet = self.predict_current_fleet()
         # self.is_caught_by_siren = self.predict_caught_by_siren()
 
@@ -146,7 +148,7 @@ class GridPredictor:
         red = color_similarity_2d(image, (255, 130, 132))
         yellow = color_similarity_2d(image, (255, 235, 156))
 
-        if TEMPLATE_ENEMY_L.match(red):
+        if TEMPLATE_ENEMY_L.match(red, similarity=0.75):
             scale = 3
         elif TEMPLATE_ENEMY_M.match(yellow):
             scale = 2
@@ -163,16 +165,20 @@ class GridPredictor:
         for name, template in self.template_enemy_genre.items():
             if template is None:
                 logger.warning(f'Enemy detection template not found: {name}')
-                exit(1)
+                logger.warning('Please create it with dev_tools/relative_record.py or dev_tools/relative_crop.py, '
+                               'then place it under ./assets/<server>/template')
+                raise ScriptError(f'Enemy detection template not found: {name}')
 
             short_name = name[6:] if name.startswith('Siren_') else name
             scaling = scaling_dic.get(short_name, 1)
-            if scaling not in image_dic:
-                shape = tuple(np.round(np.array((60, 60)) * scaling).astype(int))
-                image_dic[scaling] = rgb2gray(self.relative_crop((-0.5, -1, 0.5, 0), shape=shape))
+            scaling = (scaling,) if not isinstance(scaling, tuple) else scaling
+            for scale in scaling:
+                if scale not in image_dic:
+                    shape = tuple(np.round(np.array((60, 60)) * scale).astype(int))
+                    image_dic[scale] = rgb2gray(self.relative_crop((-0.5, -1, 0.5, 0), shape=shape))
 
-            if template.match(image_dic[scaling]):
-                return name
+                if template.match(image_dic[scale]):
+                    return name
 
         return None
 

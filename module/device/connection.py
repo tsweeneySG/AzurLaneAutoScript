@@ -1,8 +1,8 @@
 import os
 import subprocess
 
-import requests
 import uiautomator2 as u2
+from winreg import *
 
 from module.config.config import AzurLaneConfig
 from module.logger import logger
@@ -24,11 +24,48 @@ class Connection:
         """
         logger.hr('Device')
         self.config = config
-        self.serial = str(self.config.SERIAL)
+        self.serial = str(self.config.Emulator_Serial)
+        if "bluestacks4-hyperv" in self.serial:
+            self.serial = self.find_bluestacks_hyperv(self.serial)
+
         self.device = self.connect(self.serial)
-        self.disable_uiautomator2_auto_quit()
+        # Set from 3min to 7days
+        self.device.set_new_command_timeout(604800)
         # if self.config.DEVICE_SCREENSHOT_METHOD == 'aScreenCap':
         #     self._ascreencap_init()
+
+    @staticmethod
+    def find_bluestacks_hyperv(serial):
+        """
+        Find dynamic serial of Bluestacks4 Hyper-v Beta.
+
+        Args:
+            serial (str): 'bluestacks4-hyperv', 'bluestacks4-hyperv-2' for multi instance, and so on.
+
+        Returns:
+            str: 127.0.0.1:{port}
+        """
+        logger.info("Use Bluestacks4 Hyper-v Beta")
+        if serial == "bluestacks4-hyperv":
+            folder_name = "Android"
+        else:
+            folder_name = f"Android_{serial[19:]}"
+
+        logger.info("Reading Realtime adb port")
+        reg_root = ConnectRegistry(None, HKEY_LOCAL_MACHINE)
+        sub_dir = f"SOFTWARE\\BlueStacks_bgp64_hyperv\\Guests\\{folder_name}\\Config"
+        bs_keys = OpenKey(reg_root, sub_dir)
+        bs_keys_count = QueryInfoKey(bs_keys)[1]
+        for i in range(bs_keys_count):
+            key_name, key_value, key_type = EnumValue(bs_keys, i)
+            if key_name == "BstAdbPort":
+                logger.info(f"New adb port: {key_value}")
+                serial = f"127.0.0.1:{key_value}"
+                break
+
+        CloseKey(bs_keys)
+        CloseKey(reg_root)
+        return serial
 
     @property
     def adb_binary(self):
@@ -80,14 +117,16 @@ class Connection:
         self.adb_command(cmd, serial)
 
     def _adb_connect(self, serial):
-        for _ in range(3):
-            msg = self.adb_command(['connect', serial]).decode("utf-8").strip()
-            logger.info(msg)
-            if 'already' in msg:
-                return True
-
-        logger.warning(f'Failed to connect {serial} after 3 trial.')
-        return False
+        if 'emulator' in serial:
+            return True
+        else:
+            for _ in range(3):
+                msg = self.adb_command(['connect', serial]).decode("utf-8").strip()
+                logger.info(msg)
+                if 'connected' in msg:
+                    return True
+            logger.warning(f'Failed to connect {serial} after 3 trial.')
+            return False
 
     def connect(self, serial):
         """Connect to a device.
@@ -106,6 +145,13 @@ class Connection:
             logger.warning('AssertionError when connecting emulator with uiautomator2.')
             logger.warning('If you are using BlueStacks, you need to enable ADB in the settings of your emulator.')
 
-    def disable_uiautomator2_auto_quit(self, port=7912, expire=3000000):
-        self.adb_forward(['tcp:%s' % port, 'tcp:%s' % port])
-        requests.post('http://127.0.0.1:%s/newCommandTimeout' % port, data=str(expire))
+    def remove_minicap(self):
+        """
+        Force to delete minicap.
+
+        `minicap` sends compressed images, which may cause detection errors.
+        In most situation, uiautomator won't install minicap on emulators, but sometimes will.
+        """
+        logger.info('Removing minicap')
+        self.adb_shell(["rm", "/data/local/tmp/minicap"])
+        self.adb_shell(["rm", "/data/local/tmp/minicap.so"])

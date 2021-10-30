@@ -17,11 +17,11 @@ VALID_SHIP_TYPES = ['dd', 'ss', 'cl', 'ca', 'bb', 'cv', 'repair', 'others']
 class Enhancement(Dock):
     @property
     def _retire_amount(self):
-        if self.config.RETIRE_AMOUNT == 'all':
+        if self.config.Retirement_RetireAmount == 'retire_all':
             return 2000
-        if self.config.RETIRE_AMOUNT == '10':
+        if self.config.Retirement_RetireAmount == 'retire_10':
             return 10
-        return 10
+        return 2000
 
     @cached_property
     def _load_enhance_template(self):
@@ -73,7 +73,7 @@ class Enhancement(Dock):
             in: page_ship_enhance
             out: page_dock
         """
-        self.ui_back(DOCK_FILTER)
+        self.ui_back(DOCK_CHECK)
         self.dock_favourite_set(enable=False)
         # self.dock_filter_enter()
         # self.dock_filter_set(category='extra', filter_type='no_limit', enable=True)
@@ -155,7 +155,7 @@ class Enhancement(Dock):
 
             # Respond accordingly based on info_bar information
             if self.info_bar_count():
-                image = info_letter_preprocess(np.array(self.device.image.crop(INFO_BAR_DETECT.area)))
+                image = info_letter_preprocess(np.array(self.image_area(INFO_BAR_DETECT)))
                 if TEMPLATE_ENHANCE_SUCCESS.match(image):
                     enhanced = True
                 elif TEMPLATE_ENHANCE_FAILED.match(image):
@@ -207,15 +207,18 @@ class Enhancement(Dock):
             int: total enhanced
         """
         if favourite is None:
-            favourite = self.config.ENHANCE_FAVOURITE
+            favourite = self.config.Retirement_EnhanceFavourite
 
         logger.hr('Enhancement by type')
         total = 0
 
         # Process ENHANCE_ORDER_STRING if any into ship_types
-        ship_types = [s.strip().lower() for s in self.config.ENHANCE_ORDER_STRING.split('>')]
-        ship_types = list(filter(''.__ne__, ship_types))
-        if len(ship_types) == 0:
+        if self.config.Retirement_EnhanceFilter is not None:
+            ship_types = [s.strip().lower() for s in self.config.Retirement_EnhanceFilter.split('>')]
+            ship_types = list(filter(''.__ne__, ship_types))
+            if len(ship_types) == 0:
+                ship_types = [None]
+        else:
             ship_types = [None]
         logger.attr('Enhance Order', ship_types)
 
@@ -244,7 +247,7 @@ class Enhancement(Dock):
                 logger.hr(f'Dock Empty by ship type {ship_type}')
                 continue
 
-            current_count = self.config.ENHANCE_CHECK_PER_CATEGORY
+            current_count = self.config.Retirement_EnhanceCheckPerCategory
             while 1:
                 choose_result, current_count = self._enhance_choose(ship_count=current_count)
                 if not choose_result:
@@ -253,7 +256,7 @@ class Enhancement(Dock):
                 total += 10
                 if total >= self._retire_amount:
                     break
-            self.ui_back(DOCK_FILTER)
+            self.ui_back(DOCK_CHECK)
 
         self._enhance_quit()
         return total
@@ -267,7 +270,7 @@ class Enhancement(Dock):
         Returns:
             int: enhance turn count
         """
-        self.ui_click(RETIRE_APPEAR_3, check_button=DOCK_FILTER, skip_first_screenshot=True)
+        self.ui_click(RETIRE_APPEAR_3, check_button=DOCK_CHECK, skip_first_screenshot=True)
         self.handle_dock_cards_loading()
 
         total = self.enhance_ships()

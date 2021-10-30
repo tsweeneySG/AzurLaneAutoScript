@@ -5,7 +5,7 @@ from .campaign_13_1 import Config as ConfigBase
 
 MAP = CampaignMap('13-4')
 MAP.shape = 'K8'
-MAP.camera_data = ['D2', 'D6', 'H2', 'H6']
+MAP.camera_data = ['D2', 'D4', 'D6', 'H2', 'H4', 'H6']
 MAP.camera_data_spawn_point = ['D2', 'D6']
 MAP.map_data = """
     MB ME ME -- ME ++ ++ ++ MB MB ++
@@ -18,14 +18,14 @@ MAP.map_data = """
     -- ME Me ME -- -- ++ ++ -- ME --
 """
 MAP.weight_data = """
+    50 50 90 90 90 50 50 50 50 50 50
     50 50 50 50 50 50 50 50 50 50 50
     50 50 50 50 50 50 50 50 50 50 50
     50 50 50 50 50 50 50 50 50 50 50
     50 50 50 50 50 50 50 50 50 50 50
     50 50 50 50 50 50 50 50 50 50 50
-    50 50 50 50 50 50 50 50 50 50 50
-    50 50 50 50 50 50 50 50 50 50 50
-    50 50 50 50 50 50 50 50 50 50 50
+    90 50 50 50 50 50 50 50 50 90 50
+    90 90 50 50 50 50 50 50 50 90 50
 """
 MAP.spawn_data = [
     {'battle': 0, 'enemy': 3},
@@ -47,8 +47,8 @@ A7, B7, C7, D7, E7, F7, G7, H7, I7, J7, K7, \
 A8, B8, C8, D8, E8, F8, G8, H8, I8, J8, K8, \
     = MAP.flatten()
 
-class Config(ConfigBase):
 
+class Config(ConfigBase):
     INTERNAL_LINES_HOUGHLINES_THRESHOLD = 40
     EDGE_LINES_HOUGHLINES_THRESHOLD = 40
     COINCIDENT_POINT_ENCOURAGE_DISTANCE = 1.5
@@ -66,33 +66,23 @@ class Config(ConfigBase):
         'wlen': 1000,
     }
 
-step_on = SelectedGrids([A7, B1, B7, C7, D2, D3, G7, J2, K4, K6])
-road_main = RoadGrids([A7, B1, B7, C7, D2, D3, [G7, J2], K4, K6])
+
+# step_on = SelectedGrids([A7, B1, B7, C7, D2, D3, G7, J2, K4, K6])
+# road_main = RoadGrids([A7, B1, B7, C7, D2, D3, [G7, J2], K4, K6])
 
 class Campaign(CampaignBase):
     MAP = MAP
 
     def battle_0(self):
-        if self.fleet_2_step_on(step_on, roadblocks=[road_main]):
-            return True
-
-        if self.clear_roadblocks([road_main]):
-            return True
-        if self.clear_potential_roadblocks([road_main]):
+        if self.clear_filter_enemy('2L > 2M > 3L > 2E > 3E > 2C > 3C > 3M', preserve=0):
             return True
 
         return self.battle_default()
 
     def battle_3(self):
-        if self.fleet_2_step_on(step_on, roadblocks=[road_main]):
-            return True
+        self.pick_up_ammo()
 
-        if self.fleet_boss_index == 1:
-            self.pick_up_ammo()
-
-        if self.clear_roadblocks([road_main]):
-            return True
-        if self.clear_potential_roadblocks([road_main]):
+        if self.clear_filter_enemy('2L > 2M > 3L > 2E > 3E > 2C > 3C > 3M', preserve=0):
             return True
 
         return self.battle_default()

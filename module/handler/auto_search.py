@@ -103,7 +103,7 @@ class AutoSearchHandler(EnemySearchingHandler):
             setting (str):
 
         Returns:
-            bool: If clicked
+            bool: If selected to the correct option.
         """
         active = None
         for index, button in enumerate(AUTO_SEARCH_SETTINGS):
@@ -112,17 +112,18 @@ class AutoSearchHandler(EnemySearchingHandler):
 
         if active is None:
             logger.warning('No active auto search setting found')
-            active = 0
+            return False
         logger.attr('Auto_Search_Setting', dic_setting_index_to_name[active])
 
         if setting not in dic_setting_name_to_index:
             logger.warning(f'Unknown auto search setting: {setting}')
         target_index = dic_setting_name_to_index[setting]
         if active == target_index:
+            logger.info('Selected to the correct auto search setting')
+            return True
+        else:
+            self.device.click(AUTO_SEARCH_SETTINGS[target_index])
             return False
-
-        self.device.click(AUTO_SEARCH_SETTINGS[target_index])
-        return True
 
     def auto_search_setting_ensure(self, setting, skip_first_screenshot=True):
         """
@@ -144,14 +145,14 @@ class AutoSearchHandler(EnemySearchingHandler):
                 self.device.screenshot()
 
             if self._auto_search_set_click(setting):
-                if counter >= 2:
+                return True
+            else:
+                if counter >= 5:
                     logger.warning('Auto search setting could not be ensured')
                     return False
                 counter += 1
                 self.device.sleep((0.3, 0.5))
                 continue
-            else:
-                return True
 
     _auto_search_offset = (5, 5)
     _auto_search_menu_offset = (200, 20)
@@ -187,8 +188,23 @@ class AutoSearchHandler(EnemySearchingHandler):
     def handle_auto_search_continue(self):
         return self.appear_then_click(AUTO_SEARCH_MENU_CONTINUE, offset=self._auto_search_menu_offset, interval=2)
 
-    def handle_auto_search_exit(self):
-        return self.appear_then_click(AUTO_SEARCH_MENU_EXIT, offset=self._auto_search_menu_offset, interval=2)
+    def handle_auto_search_exit(self, drop=None):
+        """
+        Args:
+            drop (DropImage):
+
+        Returns:
+            bool
+        """
+        if self.appear(AUTO_SEARCH_MENU_EXIT, offset=self._auto_search_menu_offset, interval=2):
+            # Poor implementation here
+            if drop:
+                drop.handle_add(main=self, before=4)
+            self.device.click(AUTO_SEARCH_MENU_EXIT)
+            self.device.sleep(0.5)
+            return True
+        else:
+            return False
 
     def ensure_auto_search_exit(self, skip_first_screenshot=True):
         """

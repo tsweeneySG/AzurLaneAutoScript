@@ -131,7 +131,11 @@ class Camera(MapOperation):
 
         if self._prev_view is not None and np.linalg.norm(self._prev_swipe) > 0:
             if self.config.MAP_SWIPE_PREDICT:
-                swipe = self._prev_view.predict_swipe(self.view)
+                swipe = self._prev_view.predict_swipe(
+                    self.view,
+                    with_current_fleet=self.config.MAP_SWIPE_PREDICT_WITH_CURRENT_FLEET,
+                    with_sea_grids=self.config.MAP_SWIPE_PREDICT_WITH_SEA_GRIDS
+                )
                 if swipe is not None:
                     self._prev_swipe = swipe
             self.camera = tuple(np.add(self.camera, self._prev_swipe))
@@ -168,7 +172,7 @@ class Camera(MapOperation):
     def show_camera(self):
         logger.attr_align('Camera', location2node(self.camera))
 
-    def ensure_edge_insight(self, reverse=False, preset=None, swipe_limit=(3, 2)):
+    def ensure_edge_insight(self, reverse=False, preset=None, swipe_limit=(4, 3)):
         """
         Swipe to bottom left until two edges insight.
         Edges are used to locate camera.
@@ -216,7 +220,7 @@ class Camera(MapOperation):
 
         return record
 
-    def focus_to(self, location, swipe_limit=(3, 2)):
+    def focus_to(self, location, swipe_limit=(4, 3)):
         """Focus camera on a grid
 
         Args:

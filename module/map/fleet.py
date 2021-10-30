@@ -1,7 +1,5 @@
 import itertools
 
-import numpy as np
-
 from module.base.timer import Timer
 from module.exception import MapWalkError, MapEnemyMoved
 from module.handler.ambush import AmbushHandler
@@ -34,8 +32,9 @@ class Fleet(Camera, AmbushHandler):
 
     @property
     def fleet_2(self):
-        if self.fleet_current_index != 2:
-            self.fleet_switch()
+        if self.config.FLEET_2 and self.config.FLEET_BOSS == 2:
+            if self.fleet_current_index != 2:
+                self.fleet_switch()
         return self
 
     @fleet_2.setter
@@ -75,9 +74,9 @@ class Fleet(Camera, AmbushHandler):
         if not self.config.MAP_HAS_FLEET_STEP:
             return 0
         if self.fleet_current_index == 2:
-            return self.config.FLEET_2_STEP
+            return self.config.Fleet_Fleet2Step
         else:
-            return self.config.FLEET_1_STEP
+            return self.config.Fleet_Fleet1Step
 
     def fleet_switch(self):
         self.fleet_switch_click()
@@ -237,12 +236,14 @@ class Fleet(Camera, AmbushHandler):
 
         Args:
             location (tuple, str, GridInfo): Destination.
+            expected (str): Expected result on destination grid, such as 'combat', 'combat_siren', 'mystery'.
+                Will give a waring if arrive with unexpected result.
         """
         location = location_ensure(location)
         result_mystery = ''
         self.movable_before = self.map.select(is_siren=True)
         self.movable_before_normal = self.map.select(is_enemy=True)
-        if self.hp_withdraw_triggered():
+        if self.hp_retreat_triggered():
             self.withdraw()
         is_portal = self.map[location].is_portal
 
@@ -260,7 +261,7 @@ class Fleet(Camera, AmbushHandler):
             arrived = False
             # Wait to confirm fleet arrived. It does't appear immediately if fleet in combat.
             extra = 0
-            if self.config.SUBMARINE_MODE == 'hunt_only':
+            if self.config.Submarine_Mode == 'hunt_only':
                 extra += 4.5
             if self.config.MAP_HAS_LAND_BASED and grid.is_mechanism_trigger:
                 extra += grid.mechanism_wait
@@ -280,7 +281,7 @@ class Fleet(Camera, AmbushHandler):
                     grid = self.view[self.view.center_loca]
 
                 # Combat
-                if self.config.ENABLE_MAP_FLEET_LOCK and not self.is_in_map():
+                if self.config.Campaign_UseFleetLock and not self.is_in_map():
                     if self.handle_retirement():
                         self.map_offensive()
                         walk_timeout.reset()
@@ -328,13 +329,14 @@ class Fleet(Camera, AmbushHandler):
                     continue
 
                 if self.handle_walk_out_of_step():
-                    self.device.send_notification('MapWalkError', 'Walk out of step error, please check GUI.')
                     raise MapWalkError('walk_out_of_step')
 
                 # Arrive
-                if self.is_in_map() and \
-                        (grid.predict_fleet() or
-                         (walk_timeout.reached() and grid.predict_current_fleet())):
+                if self.is_in_map() and (
+                        grid.predict_fleet()
+                        or (self.config.MAP_WALK_USE_CURRENT_FLEET and grid.predict_current_fleet())
+                        or (walk_timeout.reached() and grid.predict_current_fleet())
+                ):
                     if not arrive_timer.started():
                         logger.info(f'Arrive {location2node(location)}')
                     arrive_timer.start()
@@ -392,9 +394,20 @@ class Fleet(Camera, AmbushHandler):
             raise MapEnemyMoved
         self.find_path_initial()
 
-    def goto(self, location, optimize=True, expected=''):
-        # self.device.sleep(1000)
+    def goto(self, location, optimize=None, expected=''):
+        """
+        Args:
+            location (tuple, str, GridInfo): Destination.
+            optimize (bool): Optimize walk path, reducing ambushes.
+                If None, loads MAP_WALK_OPTIMIZE
+            expected (str): Expected result on destination grid, such as 'combat', 'combat_siren', 'mystery'.
+                Will give a waring if arrive with unexpected result.
+        """
         location = location_ensure(location)
+        if optimize is None:
+            optimize = self.config.MAP_WALK_OPTIMIZE
+
+        # self.device.sleep(1000)
         if optimize and (self.config.MAP_HAS_AMBUSH or self.config.MAP_HAS_FLEET_STEP or self.config.MAP_HAS_PORTAL
                          or self.config.MAP_HAS_MAZE):
             nodes = self.map.find_path(location, step=self.fleet_step)
@@ -430,6 +443,10 @@ class Fleet(Camera, AmbushHandler):
         if self.config.FLEET_2:
             location_dict[2] = self.fleet_2_location
         location_dict[1] = self.fleet_1_location
+        # Release fortress block
+        if self.config.MAP_HAS_FORTRESS:
+            if not self.map.select(is_fortress=True):
+                self.map.select(is_mechanism_block=True).set(is_mechanism_block=False)
         self.map.find_path_initial_multi_fleet(
             location_dict, current=self.fleet_current, has_ambush=self.config.MAP_HAS_AMBUSH)
 
@@ -656,7 +673,24 @@ class Fleet(Camera, AmbushHandler):
         return self.fleet_current
 
     def map_init(self, map_):
+        """
+        This method should be called after entering a map and before doing any operations.
+
+        Args:
+            map_ (CampaignMap):
+        """
         logger.hr('Map init')
+        self.map_data_init(map_)
+        self.map_control_init()
+
+    def map_data_init(self, map_):
+        """
+        Init map data according to settings and map status.
+        Just data processing, no screenshots and clicks.
+
+        Args:
+            map_ (CampaignMap):
+        """
         self.fleet_1_location = ()
         self.fleet_2_location = ()
         self.fleet_current_index = 1
@@ -667,7 +701,7 @@ class Fleet(Camera, AmbushHandler):
         self.ammo_count = 3
         self.map = map_
         self.map.reset()
-        self.handle_map_green_config_cover()
+        self.handle_clear_mode_config_cover()
         self.map.poor_map_data = self.config.POOR_MAP_DATA
         self.map.load_map_data(use_loop=self.map_is_clear_mode)
         self.map.load_spawn_data(use_loop=self.map_is_clear_mode)
@@ -678,8 +712,14 @@ class Fleet(Camera, AmbushHandler):
         self.map.load_mechanism(
             land_based=self.config.MAP_HAS_LAND_BASED,
             maze=self.config.MAP_HAS_MAZE,
+            fortress=self.config.MAP_HAS_FORTRESS
         )
 
+    def map_control_init(self):
+        """
+        Preparation before operations.
+        Such as select strategy, calculate hp and level, init camera position, do first map scan.
+        """
         self.handle_strategy(index=1 if not self.fleets_reversed else 2)
         self.update()
         if self.handle_fleet_reverse():
@@ -696,12 +736,13 @@ class Fleet(Camera, AmbushHandler):
         self.round_reset()
         self.round_battle()
 
-    def handle_map_green_config_cover(self):
-        if not self.map_is_green:
+    def handle_clear_mode_config_cover(self):
+        if not self.map_is_clear_mode:
             return False
 
         if self.config.POOR_MAP_DATA and self.map.is_map_data_poor:
             self.config.POOR_MAP_DATA = False
+        self.map.fortress_data = [(), ()]
 
         return True
 

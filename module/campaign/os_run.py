@@ -1,11 +1,11 @@
 from module.os.config import OSConfig
 from module.os.map_operation import OSMapOperation
-from module.os.operation_siren import OperationSiren, RECORD_MISSION_ACCEPT, RECORD_SUPPLY_BUY, RECORD_MISSION_FINISH
+from module.os.operation_siren import OperationSiren
+from module.os_handler.action_point import ActionPointLimit
 
 
 class OSCampaignRun(OSMapOperation):
     campaign: OperationSiren
-
     campaign_loaded = False
 
     def load_campaign(self):
@@ -19,31 +19,30 @@ class OSCampaignRun(OSMapOperation):
         self.campaign_loaded = True
         return True
 
-    def run(self):
+    def opsi_explore(self):
         self.load_campaign()
-        self.campaign.run()
+        try:
+            self.campaign.os_explore()
+        except ActionPointLimit:
+            self.campaign.config.task_delay(minute=360)
 
-    def run_operation_siren(self):
+    def opsi_daily(self):
         self.load_campaign()
-        self.campaign.operation_siren()
+        try:
+            self.campaign.os_daily()
+        except ActionPointLimit:
+            self.campaign.config.task_delay(minute=360)
 
-    def record_executed_since(self):
-        mission = self.config.ENABLE_OS_MISSION_ACCEPT \
-                  and not self.config.record_executed_since(option=RECORD_MISSION_ACCEPT, since=(0,))
-        supply = self.config.ENABLE_OS_SUPPLY_BUY \
-                 and not self.config.record_executed_since(option=RECORD_SUPPLY_BUY, since=(0,))
-        finish = self.config.ENABLE_OS_MISSION_FINISH \
-                 and not self.config.record_executed_since(option=RECORD_MISSION_FINISH, since=(0,))
-
-        if mission or supply or finish:
-            return False
-        else:
-            return True
-
-    def run_daily(self):
+    def opsi_meowfficer_farming(self):
         self.load_campaign()
-        self.campaign.operation_siren_daily()
+        try:
+            self.campaign.os_meowfficer_farming()
+        except ActionPointLimit:
+            self.campaign.config.task_delay(server_update=True)
 
-    def run_clear_os_world(self):
+    def opsi_obscure(self):
         self.load_campaign()
-        self.campaign.clear_os_world()
+        try:
+            self.campaign.os_obscure()
+        except ActionPointLimit:
+            self.campaign.config.task_delay(minute=360)

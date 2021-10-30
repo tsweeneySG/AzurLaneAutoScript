@@ -71,6 +71,13 @@ class InfoHandler(ModuleBase):
             self.device.click(POPUP_CONFIRM)
             POPUP_CONFIRM.name = POPUP_CONFIRM.name[:-len(name) - 1]
             return True
+        elif self.appear(POPUP_CANCEL_2, offset=self._popup_offset) \
+                and self.appear(POPUP_CONFIRM_2, offset=self._popup_offset, interval=2):
+            prev_name = POPUP_CONFIRM_2.name
+            POPUP_CONFIRM_2.name = POPUP_CONFIRM.name + '_' + name
+            self.device.click(POPUP_CONFIRM_2)
+            POPUP_CONFIRM_2.name = prev_name
+            return True
         else:
             return False
 
@@ -80,6 +87,13 @@ class InfoHandler(ModuleBase):
             POPUP_CANCEL.name = POPUP_CANCEL.name + '_' + name
             self.device.click(POPUP_CANCEL)
             POPUP_CANCEL.name = POPUP_CANCEL.name[:-len(name) - 1]
+            return True
+        elif self.appear(POPUP_CONFIRM_2, offset=self._popup_offset) \
+                and self.appear(POPUP_CANCEL_2, offset=self._popup_offset, interval=2):
+            prev_name = POPUP_CANCEL_2.name
+            POPUP_CANCEL_2.name = POPUP_CANCEL.name + '_' + name
+            self.device.click(POPUP_CANCEL_2)
+            POPUP_CANCEL_2.name = prev_name
             return True
         else:
             return False
@@ -94,31 +108,32 @@ class InfoHandler(ModuleBase):
 
         return False
 
-    def handle_urgent_commission(self, save_get_items=None):
+    def handle_urgent_commission(self, drop=None):
         """
         Args:
-            save_get_items (bool):
+            drop (DropImage):
 
         Returns:
             bool:
         """
-        if save_get_items is None:
-            save_get_items = self.config.ENABLE_SAVE_GET_ITEMS
-
         appear = self.appear(GET_MISSION, offset=True, interval=2)
         if appear:
             logger.info('Get urgent commission')
-            if save_get_items:
+            if drop:
                 self.handle_info_bar()
-                self.device.save_screenshot('get_mission')
+                drop.add(self.device.image)
             self.device.click(GET_MISSION)
         return appear
 
     def handle_combat_low_emotion(self):
-        if not self.config.IGNORE_LOW_EMOTION_WARN:
+        if not self.config.Emotion_IgnoreLowEmotionWarn:
             return False
 
-        return self.handle_popup_confirm('IGNORE_LOW_EMOTION')
+        result = self.handle_popup_confirm('IGNORE_LOW_EMOTION')
+        if result:
+            # Avoid clicking AUTO_SEARCH_MAP_OPTION_OFF
+            self.interval_reset(AUTO_SEARCH_MAP_OPTION_OFF)
+        return result
 
     def handle_use_data_key(self):
         if not self.config.USE_DATA_KEY:
@@ -129,11 +144,35 @@ class InfoHandler(ModuleBase):
             return False
 
         if self.appear(USE_DATA_KEY, offset=(20, 20)):
-            self.device.click(USE_DATA_KEY_NOTIFIED)
-            self.device.sleep((0.5, 0.8))
+            skip_first_screenshot = True
+            while 1:
+                if skip_first_screenshot:
+                    skip_first_screenshot = False
+                else:
+                    self.device.screenshot()
+
+                enabled = self.image_color_count(USE_DATA_KEY_NOTIFIED,
+                    color=(140, 207, 66), threshold=180, count=10)
+                if enabled:
+                    break
+
+                if self.appear(USE_DATA_KEY, offset=(20, 20), interval=5):
+                    self.device.click(USE_DATA_KEY_NOTIFIED)
+                    continue
+
+            self.config.USE_DATA_KEY = False  # Reset on success as task can be stopped before can be recovered
             return self.handle_popup_confirm('USE_DATA_KEY')
 
         return False
+
+    def handle_vote_popup(self):
+        """
+        Dismiss vote pop-ups.
+
+        Returns:
+            bool:
+        """
+        return self.appear_then_click(VOTE_CANCEL, offset=(20, 20), interval=2)
 
     """
     Guild popup info
@@ -177,7 +216,7 @@ class InfoHandler(ModuleBase):
     Story
     """
     story_popup_timout = Timer(10, count=20)
-    map_has_fast_forward = False  # Will be override in fast_forward.py
+    map_has_clear_mode = False  # Will be override in fast_forward.py
 
     # Area to detect the options, should include at least 3 options.
     _story_option_area = (730, 188, 1140, 480)
@@ -250,7 +289,7 @@ class InfoHandler(ModuleBase):
         return False
 
     def handle_story_skip(self):
-        if self.map_has_fast_forward:
+        if self.map_has_clear_mode:
             return False
 
         return self.story_skip()

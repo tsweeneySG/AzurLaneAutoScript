@@ -171,7 +171,8 @@ def get_research_series_jp(image):
     parameters = {'height': 200, 'prominence': 50}
 
     area = SERIES_DETAIL.area
-    im = color_similarity_2d(image.crop(area).resize((46, 25)), color=(255, 255, 255))
+    # Resize is not needed because only one area will be checked in JP server.
+    im = color_similarity_2d(image.crop(area), color=(255, 255, 255))
     peaks = [len(signal.find_peaks(row, **parameters)[0]) for row in im[2:-2]]
     upper, lower = max(peaks), min(peaks)
     # print(upper, lower)
@@ -235,7 +236,7 @@ def get_research_cost_jp(image):
     area_template = (0, 0, 78, 57)
     folder = './assets/stats_basic'
     templates = load_folder(folder)
-    costs = {'coins': False, 'cubes': False, 'plate': False}
+    costs = {'coin': False, 'cube': False, 'plate': False}
     for name, template in templates.items():
         template = load_image(template).resize(size=size_template).crop(area_template)
         sim = match_template(image=image,
@@ -251,8 +252,8 @@ def get_research_cost_jp(image):
                 continue
 
     # Rename keys to be the same as attrs of ResearchProjectJp.    
-    costs['need_coin'] = costs.pop('coins')
-    costs['need_cube'] = costs.pop('cubes')
+    costs['need_coin'] = costs.pop('coin')
+    costs['need_cube'] = costs.pop('cube')
     costs['need_part'] = costs.pop('plate')
     return costs
 
@@ -339,6 +340,7 @@ class ResearchProject:
         self.need_coin = False
         self.need_cube = False
         self.need_part = False
+        self.task = ''
 
         matched = False
         for data in self.get_data(name=self.name, series=series):
@@ -346,6 +348,7 @@ class ResearchProject:
             self.data = data
             self.genre = data['name'][0]
             self.duration = str(data['time'] / 3600).rstrip('.0')
+            self.task = data['task']
             for item in data['input']:
                 result = re.search(self.REGEX_INPUT, item['name'].replace(' ', '').lower())
                 if result:
@@ -442,6 +445,7 @@ class ResearchProjectJp:
         self.need_coin = False
         self.need_cube = False
         self.need_part = False
+        self.task = ''
 
     def check_valid(self):
         self.valid = False
@@ -563,54 +567,59 @@ class ResearchSelector(UI):
                 such as [object, object, object, 'reset']
         """
         # Load filter string
-        preset = self.config.RESEARCH_FILTER_PRESET
-        if preset == 'customized':
-            string = self.config.RESEARCH_FILTER_STRING
+        preset = self.config.Research_PresetFilter
+        if preset == 'custom':
+            string = self.config.Research_CustomFilter
         else:
             if preset not in DICT_FILTER_PRESET:
                 logger.warning(f'Preset not found: {preset}, use default preset')
-                preset = 'series_3_than_2'
+                preset = 'series_4'
             string = DICT_FILTER_PRESET[preset]
 
+        # Filter uses `hakuryu`, but allows both `hakuryu` and `hakuryuu`
+        string = string.lower().replace('hakuryuu', 'hakuryu')
+
         FILTER.load(string)
-        priority = FILTER.apply(self.projects)
-        priority = self._research_check_filter(priority)
+        priority = FILTER.apply(self.projects, func=self._research_check)
 
         # Log
         logger.attr('Filter_sort', ' > '.join([str(project) for project in priority]))
         return priority
 
-    def _research_check_filter(self, priority):
+    def _research_check(self, project):
         """
         Args:
-            priority (list): A list of ResearchProject objects and preset strings,
-                such as [object, object, object, 'reset']
+            project (ResearchProject):
 
         Returns:
-            list: A list of ResearchProject objects and preset strings,
-                such as [object, object, object, 'reset']
+            bool:
         """
-        out = []
-        for proj in priority:
-            if isinstance(proj, str):
-                out.append(proj)
-                continue
-            if not proj.valid:
-                continue
-            if (not self.config.RESEARCH_USE_CUBE and proj.need_cube) \
-                    or (not self.config.RESEARCH_USE_COIN and proj.need_coin) \
-                    or (not self.config.RESEARCH_USE_PART and proj.need_part):
-                continue
-            # Reasons to ignore B series and E-2:
-            # - Can't guarantee research condition satisfied.
-            #   You may get nothing after a day of running, because you didn't complete the precondition.
-            # - Low income from B series research.
-            #   Gold B-4 basically equivalent to C-12, but needs a lot of oil.
-            if (proj.genre.upper() == 'B') \
-                    or (proj.genre.upper() == 'E' and str(proj.duration) != '6'):
-                continue
-            out.append(proj)
-        return out
+        if not project.valid:
+            return False
+        if (not self.config.Research_UseCube and project.need_cube) \
+                or (not self.config.Research_UseCoin and project.need_coin) \
+                or (not self.config.Research_UsePart and project.need_part):
+            return False
+        # Reasons to ignore B series and E-2:
+        # - Can't guarantee research condition satisfied.
+        #   You may get nothing after a day of running, because you didn't complete the precondition.
+        # - Low income from B series research.
+        #   Gold B-4 basically equivalent to C-12, but needs a lot of oil.
+
+        if project.genre.upper() == 'B':
+            return False
+        # T series require commission
+        if project.genre.upper() == 'T':
+            return False
+        # 2021.08.19 Allow E-2 to disassemble tech boxes, but JP still remains the same.
+        if self.config.SERVER == 'jp':
+            if project.genre.upper() == 'E' and str(project.duration) != '6':
+                return False
+        else:
+            if project.genre.upper() == 'E' and project.task != '':
+                return False
+
+        return True
 
     def research_sort_shortest(self):
         """
@@ -619,8 +628,7 @@ class ResearchSelector(UI):
                 such as [object, object, object, 'reset']
         """
         FILTER.load(FILTER_STRING_SHORTEST)
-        priority = FILTER.apply(self.projects)
-        priority = self._research_check_filter(priority)
+        priority = FILTER.apply(self.projects, func=self._research_check)
 
         logger.attr('Filter_sort', ' > '.join([str(project) for project in priority]))
         return priority
@@ -632,8 +640,7 @@ class ResearchSelector(UI):
                 such as [object, object, object, 'reset']
         """
         FILTER.load(FILTER_STRING_CHEAPEST)
-        priority = FILTER.apply(self.projects)
-        priority = self._research_check_filter(priority)
+        priority = FILTER.apply(self.projects, func=self._research_check)
 
         logger.attr('Filter_sort', ' > '.join([str(project) for project in priority]))
         return priority

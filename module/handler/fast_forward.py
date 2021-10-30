@@ -21,13 +21,37 @@ class FastForwardHandler(AutoSearchHandler):
     map_achieved_star_1 = False
     map_achieved_star_2 = False
     map_achieved_star_3 = False
-    map_is_clear = False
-    map_is_3_star = False
-    map_is_green = False
-    map_has_fast_forward = False
+    map_is_100_percent_clear = False
+    map_is_3_stars = False
+    map_is_threat_safe = False
+    map_has_clear_mode = False
     map_is_clear_mode = False  # Clear mode == fast forward
     map_is_auto_search = False
     map_is_2x_book = False
+
+    STAGE_INCREASE = [
+        """
+        1-1 > 1-2 > 1-3 > 1-4
+        > 2-1 > 2-2 > 2-3 > 2-4
+        > 3-1 > 3-2 > 3-3 > 3-4
+        > 4-1 > 4-2 > 4-3 > 4-4
+        > 5-1 > 5-2 > 5-3 > 5-4
+        > 6-1 > 6-2 > 6-3 > 6-4
+        > 7-1 > 7-2 > 7-3 > 7-4
+        > 8-1 > 8-2 > 8-3 > 8-4
+        > 9-1 > 9-2 > 9-3 > 9-4
+        > 10-1 > 10-2 > 10-3 > 10-4
+        > 11-1 > 11-2 > 11-3 > 11-4
+        > 12-1 > 12-2 > 12-3 > 12-4
+        > 13-1 > 13-2 > 13-3 > 13-4
+        > 14-1 > 14-2 > 14-3 > 14-4
+        """,
+        'A1 > A2 > A3',
+        'B1 > B2 > B3',
+        'C1 > C2 > C3',
+        'D1 > D2 > D3',
+        'SP1 > SP2 > SP3 > SP4',
+    ]
 
     def map_get_info(self):
         """
@@ -38,10 +62,10 @@ class FastForwardHandler(AutoSearchHandler):
         self.map_achieved_star_1 = self.appear(MAP_STAR_1)
         self.map_achieved_star_2 = self.appear(MAP_STAR_2)
         self.map_achieved_star_3 = self.appear(MAP_STAR_3)
-        self.map_is_clear = self.map_clear_percentage > 0.95
-        self.map_is_3_star = self.map_achieved_star_1 and self.map_achieved_star_2 and self.map_achieved_star_3
-        self.map_is_green = self.appear(MAP_GREEN)
-        self.map_has_fast_forward = self.map_is_clear and fast_forward.appear(main=self)
+        self.map_is_100_percent_clear = self.map_clear_percentage > 0.95
+        self.map_is_3_stars = self.map_achieved_star_1 and self.map_achieved_star_2 and self.map_achieved_star_3
+        self.map_is_threat_safe = self.appear(MAP_GREEN)
+        self.map_has_clear_mode = self.map_is_100_percent_clear and fast_forward.appear(main=self)
 
         # Override config
         if self.map_achieved_star_1:
@@ -49,27 +73,28 @@ class FastForwardHandler(AutoSearchHandler):
             self.config.MAP_HAS_MAP_STORY = False
         self.config.MAP_CLEAR_ALL_THIS_TIME = self.config.STAR_REQUIRE_3 \
             and not self.__getattribute__(f'map_achieved_star_{self.config.STAR_REQUIRE_3}') \
-            and (self.config.STOP_IF_MAP_REACH in ['map_3_star', 'map_green'])
+            and (self.config.StopCondition_MapAchievement in ['map_3_stars', 'threat_safe'])
         logger.attr('MAP_CLEAR_ALL_THIS_TIME', self.config.MAP_CLEAR_ALL_THIS_TIME)
 
         # Log
-        names = ['map_achieved_star_1', 'map_achieved_star_2', 'map_achieved_star_3', 'map_is_clear', 'map_is_3_star',
-                 'map_is_green', 'map_has_fast_forward']
+        names = ['map_achieved_star_1', 'map_achieved_star_2', 'map_achieved_star_3',
+                 'map_is_100_percent_clear', 'map_is_3_stars',
+                 'map_is_threat_safe', 'map_has_clear_mode']
         strip = ['map', 'achieved', 'is', 'has']
         log_names = ['_'.join([x for x in name.split('_') if x not in strip]) for name in names]
         text = ', '.join([l for l, n in zip(log_names, names) if self.__getattribute__(n)])
         text = f'{int(self.map_clear_percentage * 100)}%, ' + text
         logger.attr('Map_info', text)
-        logger.attr('STOP_IF_MAP_REACH', self.config.STOP_IF_MAP_REACH)
+        logger.attr('StopCondition_MapAchievement', self.config.StopCondition_MapAchievement)
 
     def handle_fast_forward(self):
-        if not self.map_has_fast_forward:
+        if not self.map_has_clear_mode:
             self.map_is_clear_mode = False
             self.map_is_auto_search = False
             self.map_is_2x_book = False
             return False
 
-        if self.config.ENABLE_FAST_FORWARD:
+        if self.config.Campaign_UseClearMode:
             self.config.MAP_HAS_AMBUSH = False
             self.config.MAP_HAS_FLEET_STEP = False
             self.config.MAP_HAS_MOVABLE_ENEMY = False
@@ -77,9 +102,10 @@ class FastForwardHandler(AutoSearchHandler):
             self.config.MAP_HAS_PORTAL = False
             self.config.MAP_HAS_LAND_BASED = False
             self.config.MAP_HAS_MAZE = False
+            self.config.MAP_HAS_FORTRESS = False
             self.map_is_clear_mode = True
-            self.map_is_auto_search = self.config.ENABLE_AUTO_SEARCH
-            self.map_is_2x_book = self.config.ENABLE_2X_BOOK
+            self.map_is_auto_search = self.config.Campaign_UseAutoSearch
+            self.map_is_2x_book = self.config.Campaign_Use2xBook
         else:
             # When disable fast forward, MAP_HAS_AMBUSH depends on map settings.
             # self.config.MAP_HAS_AMBUSH = True
@@ -88,7 +114,7 @@ class FastForwardHandler(AutoSearchHandler):
             self.map_is_2x_book = False
             pass
 
-        status = 'on' if self.config.ENABLE_FAST_FORWARD else 'off'
+        status = 'on' if self.config.Campaign_UseClearMode else 'off'
         changed = fast_forward.set(status=status, main=self)
         return changed
 
@@ -99,7 +125,7 @@ class FastForwardHandler(AutoSearchHandler):
             logger.info('No fleet lock option.')
             return False
 
-        status = 'on' if self.config.ENABLE_MAP_FLEET_LOCK else 'off'
+        status = 'on' if self.config.Campaign_UseFleetLock else 'off'
         changed = fleet_lock.set(status=status, main=self)
 
         return changed
@@ -137,7 +163,7 @@ class FastForwardHandler(AutoSearchHandler):
             return False
 
         self.fleet_preparation_sidebar_ensure(3)
-        self.auto_search_setting_ensure(self.config.AUTO_SEARCH_SETTING)
+        self.auto_search_setting_ensure(self.config.Fleet_AutoSearchFleetOrder)
         return True
 
     def handle_auto_search_continue(self):
@@ -146,7 +172,7 @@ class FastForwardHandler(AutoSearchHandler):
         for 2x book handling if needed
         """
         if self.appear(AUTO_SEARCH_MENU_CONTINUE, offset=self._auto_search_menu_offset, interval=2):
-            self.map_is_2x_book = self.config.ENABLE_2X_BOOK
+            self.map_is_2x_book = self.config.Campaign_Use2xBook
             self.handle_2x_book_setting(mode='auto')
             self.device.click(AUTO_SEARCH_MENU_CONTINUE)
             self.interval_reset(AUTO_SEARCH_MENU_CONTINUE)
@@ -163,28 +189,68 @@ class FastForwardHandler(AutoSearchHandler):
         """
         return color_bar_percentage(self.device.image, area=MAP_CLEAR_PERCENTAGE.area, prev_color=(231, 170, 82))
 
+    def campaign_name_increase(self, name):
+        """
+        Increase name to its next stage.
+
+        Args:
+            name (str):
+
+        Returns:
+            str: Name of next stage, or origin name if unable to increase.
+        """
+        name = name.upper()
+        for increase in self.STAGE_INCREASE:
+            increase = [i.strip(' \t\r\n') for i in increase.split('>')]
+            if name in increase:
+                index = increase.index(name) + 1
+                if index < len(increase):
+                    return increase[index]
+                else:
+                    logger.info('Stage increase reach end')
+                    return name
+
+        return name
+
     def triggered_map_stop(self):
         """
         Returns:
             bool:
         """
-        if self.config.STOP_IF_MAP_REACH == 'map_100':
-            if self.map_is_clear:
+        if self.config.StopCondition_MapAchievement == '100_percent_clear':
+            if self.map_is_100_percent_clear:
                 return True
 
-        if self.config.STOP_IF_MAP_REACH == 'map_3_star':
-            if self.map_is_clear and self.map_is_3_star:
+        if self.config.StopCondition_MapAchievement == 'map_3_stars':
+            if self.map_is_100_percent_clear and self.map_is_3_stars:
                 return True
 
-        if self.config.STOP_IF_MAP_REACH == 'map_green_without_3_star':
-            if self.map_is_clear and self.map_is_green:
+        if self.config.StopCondition_MapAchievement == 'threat_safe_without_3_stars':
+            if self.map_is_100_percent_clear and self.map_is_threat_safe:
                 return True
 
-        if self.config.STOP_IF_MAP_REACH == 'map_green':
-            if self.map_is_clear and self.map_is_3_star and self.map_is_green:
+        if self.config.StopCondition_MapAchievement == 'threat_safe':
+            if self.map_is_100_percent_clear and self.map_is_3_stars and self.map_is_threat_safe:
                 return True
 
         return False
+
+    def handle_map_stop(self):
+        """
+        Modify configs after reaching a stop condition.
+        Disable current task or increase stage.
+        """
+        if self.config.StopCondition_StageIncrease:
+            prev_stage = self.config.Campaign_Name
+            next_stage = self.campaign_name_increase(prev_stage)
+            if next_stage != prev_stage:
+                logger.info(f'Stage {prev_stage} increases to {next_stage}')
+                self.config.Campaign_Name = next_stage
+            else:
+                logger.info(f'Stage {prev_stage} cannot increase, stop at current stage')
+                self.config.Scheduler_Enable = False
+        else:
+            self.config.Scheduler_Enable = False
 
     def _set_2x_book_status(self, status, check_button, box_button, skip_first_screenshot=True):
         """

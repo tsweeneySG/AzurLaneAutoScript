@@ -10,9 +10,9 @@ from module.ui.ui import UI
 OPPONENT = ButtonGrid(origin=(104, 77), delta=(244, 0), button_shape=(212, 304), grid_shape=(4, 1))
 
 # Mode 'easiest' constants
-# MAX_LVL_SUM = Max Fleet Size (6) * Max Lvl (120)
+# MAX_LVL_SUM = Max Fleet Size (6) * Max Lvl (125)
 # PWR_FACTOR used to make overall PWR manageable
-MAX_LVL_SUM = 720
+MAX_LVL_SUM = 750
 PWR_FACTOR = 100
 
 
@@ -110,12 +110,15 @@ class OpponentChoose(UI):
             self.ui_click(click_button=BACK_ARROW, check_button=NEW_OPPONENT,
                           appear_button=EXERCISE_PREPARATION, skip_first_screenshot=True)
 
-    def _opponent_sort(self):
+    def _opponent_sort(self, method="max_exp"):
         """
+        Args:
+            method: EXERCISE_CHOOSE_MODE
+
         Returns:
             list[int]: List of opponent index, such as [2, 1, 0, 3].
                        Attack one by one.
         """
-        order = np.argsort([- x.get_priority(self.config.EXERCISE_CHOOSE_MODE) for x in self.opponents])
+        order = np.argsort([- x.get_priority(method) for x in self.opponents])
         logger.attr('Order', str(order))
         return order

@@ -4,6 +4,8 @@ import re
 from dev_tools.slpp import slpp
 from module.base.utils import location2node
 from module.map.utils import *
+from dev_tools.utils import LuaLoader
+from module.logger import logger
 
 """
 This an auto-tool to extract map files used in Alas.
@@ -71,6 +73,7 @@ DIC_SIREN_NAME_CHI_TO_ENG = {
     'longqibing': 'Carabiniere',
     'sairenquzhu_ii': 'DD',
     'sairenqingxun_ii': 'CL',
+    'sairenzhongxun_ii': 'CA',
     'sairenzhanlie_ii': 'BB',
     'sairenhangmu_ii': 'CV',
     'qinraozhe': 'Intruder',
@@ -112,30 +115,12 @@ DIC_SIREN_NAME_CHI_TO_ENG = {
     'moye': 'Maya',
     'yishi': 'Ise',
     'sunying': 'Junyo',
+
+    # Skybound Oratorio
+    'aerjiliya': 'Algerie',
+    'jialisuoniye': 'LaGalissonniere',
+    'wokelan': 'Vauquelin',
 }
-
-
-def load_lua(folder, file, prefix):
-    with open(os.path.join(folder, file), 'r', encoding='utf-8') as f:
-        text = f.read()
-    print(f'Loading {file}')
-    result = slpp.decode(text[prefix:])
-    print(f'{len(result.keys())} items loaded')
-    return result
-
-
-def load_lua_by_function(folder, file):
-    with open(os.path.join(folder, file), 'r', encoding='utf-8') as f:
-        text = f.read()
-    print(f'Loading {file}')
-    matched = re.findall('function \(\)(.*?)end\(\)', text, re.S)
-    result = {}
-    for func in matched:
-        add = slpp.decode('{' + func + '}')
-        result.update(add)
-
-    print(f'{len(result.keys())} items loaded')
-    return result
 
 
 class MapData:
@@ -211,16 +196,17 @@ class MapData:
             for siren_id in data['ai_expedition_list'].values():
                 if siren_id == 1:
                     continue
-                exped_data = EXPECTATION_DATA[siren_id]
-                name = exped_data['icon']
+                exped_data = EXPECTATION_DATA.get(siren_id, {})
+                name = exped_data.get('icon', str(siren_id))
                 name = DIC_SIREN_NAME_CHI_TO_ENG.get(name, name)
                 if name not in self.MAP_SIREN_TEMPLATE:
                     self.MAP_SIREN_TEMPLATE.append(name)
-                self.MOVABLE_ENEMY_TURN.add(int(exped_data['ai_mov']))
+                self.MOVABLE_ENEMY_TURN.add(int(exped_data.get('ai_mov', 2)))
             self.MAP_HAS_MOVABLE_ENEMY = bool(len(self.MOVABLE_ENEMY_TURN))
             self.MAP_HAS_MAP_STORY = len(data['story_refresh_boss']) > 0
             self.MAP_HAS_FLEET_STEP = bool(data['is_limit_move'])
             self.MAP_HAS_AMBUSH = bool(data['is_ambush']) or bool(data['is_air_attack'])
+            self.MAP_HAS_MYSTERY = sum([b.get('mystery', 0) for b in self.spawn_data]) > 0
             self.MAP_HAS_PORTAL = bool(len(self.portal))
             self.MAP_HAS_LAND_BASED = bool(len(self.land_based))
             for n in range(1, 4):
@@ -379,6 +365,7 @@ class MapData:
         lines.append(f'    MAP_HAS_MAP_STORY = {self.MAP_HAS_MAP_STORY}')
         lines.append(f'    MAP_HAS_FLEET_STEP = {self.MAP_HAS_FLEET_STEP}')
         lines.append(f'    MAP_HAS_AMBUSH = {self.MAP_HAS_AMBUSH}')
+        lines.append(f'    MAP_HAS_MYSTERY = {self.MAP_HAS_MYSTERY}')
         if self.MAP_HAS_PORTAL:
             lines.append(f'    MAP_HAS_PORTAL = {self.MAP_HAS_PORTAL}')
         if self.MAP_HAS_LAND_BASED:
@@ -391,18 +378,34 @@ class MapData:
         lines.append('')
 
         # Campaign
+        battle = self.data["boss_refresh"]
         lines.append('class Campaign(CampaignBase):')
         lines.append('    MAP = MAP')
+        lines.append(f'    ENEMY_FILTER = \'{ENEMY_FILTER}\'')
         lines.append('')
         lines.append('    def battle_0(self):')
         if len(self.MAP_SIREN_TEMPLATE):
             lines.append('        if self.clear_siren():')
             lines.append('            return True')
-            lines.append('')
+        preserve = self.data["boss_refresh"] - 5 if battle >= 5 else 0
+        lines.append(f'        if self.clear_filter_enemy(self.ENEMY_FILTER, preserve={preserve}):')
+        lines.append('            return True')
+        lines.append('')
         lines.append('        return self.battle_default()')
         lines.append('')
+        if battle >= 6:
+            lines.append('    def battle_5(self):')
+            if len(self.MAP_SIREN_TEMPLATE):
+                lines.append('        if self.clear_siren():')
+                lines.append('            return True')
+            preserve = 0
+            lines.append(f'        if self.clear_filter_enemy(self.ENEMY_FILTER, preserve={preserve}):')
+            lines.append('            return True')
+            lines.append('')
+            lines.append('        return self.battle_default()')
+            lines.append('')
         lines.append(f'    def battle_{self.data["boss_refresh"]}(self):')
-        if self.data["boss_refresh"] >= 5:
+        if battle >= 5:
             lines.append('        return self.fleet_boss.clear_boss()')
         else:
             lines.append('        return self.clear_boss()')
@@ -520,10 +523,9 @@ class ChapterTemplate:
 """
 This an auto-tool to extract map files used in Alas.
 
-Git clone https://github.com/Dimbreath/AzurLaneData, to get the decrypted scripts.
+Git clone https://github.com/AzurLaneTools/AzurLaneLuaScripts, to get the decrypted scripts.
 Arguments:
-    FILE:            Folder contains `chapter_template.lua` and `expedition_data_template.lua`,
-                     Such as '<your_folder>/<server>/sharecfg'
+    FILE:            Path to your AzurLaneLuaScripts directory
     FOLDER:          Folder to save, './campaign/test'
     KEYWORD:         A keyword in map name, such as '短兵相接' (7-2, zh-CN), 'Counterattack!' (3-4, en-US)
                      Or map id, such as 702 (7-2), 1140017 (Iris of Light and Dark D2)
@@ -539,12 +541,14 @@ KEYWORD = ''
 SELECT = False
 OVERWRITE = True
 IS_WAR_ARCHIVES = False
+ENEMY_FILTER = '1L > 1M > 1E > 1C > 2L > 2M > 2E > 2C > 3L > 3M > 3E > 3C'
 
-DATA = load_lua_by_function(FILE, 'chapter_template.lua')
-DATA_LOOP = load_lua(FILE, 'chapter_template_loop.lua', prefix=41)
-MAP_EVENT_LIST = load_lua(FILE, 'map_event_list.lua', prefix=34)
-MAP_EVENT_TEMPLATE = load_lua(FILE, 'map_event_template.lua', prefix=38)
-EXPECTATION_DATA = load_lua_by_function(FILE, 'expedition_data_template.lua')
+LOADER = LuaLoader(FILE, server='CN')
+DATA = LOADER.load('./sharecfg/chapter_template.lua')
+DATA_LOOP = LOADER.load('./sharecfg/chapter_template_loop.lua')
+MAP_EVENT_LIST = LOADER.load('./sharecfg/map_event_list.lua')
+MAP_EVENT_TEMPLATE = LOADER.load('./sharecfg/map_event_template.lua')
+EXPECTATION_DATA = LOADER.load('./sharecfgdata/expedition_data_template.lua')
 
 ct = ChapterTemplate()
 ct.extract(ct.get_chapter_by_name(KEYWORD, select=SELECT), folder=FOLDER)
